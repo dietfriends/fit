@@ -3,13 +3,13 @@
 # Run `pod lib lint fitness.podspec' to validate before publishing.
 #
 Pod::Spec.new do |s|
-  s.name             = 'fitness'
+  s.name             = 'fit'
   s.version          = '0.0.1'
   s.summary          = 'Flutter SDK for iOS HealthKit, Android GoogleFit services and Samsung Health.'
   s.description      = <<-DESC
 A new flutter plugin project.
                        DESC
-  s.homepage         = 'https://pub.dev/packages/fitness'
+  s.homepage         = 'https://pub.dev/packages/fit'
   s.license          = { :file => '../LICENSE' }
   s.author           = { 'Passion Factory' => 'minsu.lee@dietfriends.kr' }
   s.source           = { :path => '.' }

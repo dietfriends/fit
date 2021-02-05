@@ -2,7 +2,7 @@ import Flutter
 import UIKit
 
 // Imple
-class SwiftFitnessApi: NSObject, FLTFitnessApi {
+class SwiftFitApi: NSObject, FLTFitApi {
     func initialize(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
     }
@@ -18,10 +18,10 @@ class SwiftFitnessApi: NSObject, FLTFitnessApi {
 
 }
 
-public class SwiftFitnessPlugin: NSObject, FlutterPlugin {
+public class SwiftFitPlugin: NSObject, FlutterPlugin {
   public static func register(with registrar: FlutterPluginRegistrar) {
-    let instance = SwiftFitnessApi()
+    let instance = SwiftFitApi()
 
-    FLTFitnessApiSetup(registrar.messenger(), instance)
+    FLTFitApiSetup(registrar.messenger(), instance)
   }
 }

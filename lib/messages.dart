@@ -39,10 +39,10 @@ class ListActivityLogsReuqest {
   }
 }
 
-class FitnessApi {
+class FitApi {
   Future<void> initialize() async {
     const BasicMessageChannel<Object> channel =
-        BasicMessageChannel<Object>('dev.flutter.pigeon.FitnessApi.initialize', StandardMessageCodec());
+        BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.initialize', StandardMessageCodec());
     final Map<Object, Object> replyMap = await channel.send(null) as Map<Object, Object>;
     if (replyMap == null) {
       throw PlatformException(
@@ -64,7 +64,7 @@ class FitnessApi {
 
   Future<void> dispose() async {
     const BasicMessageChannel<Object> channel =
-        BasicMessageChannel<Object>('dev.flutter.pigeon.FitnessApi.dispose', StandardMessageCodec());
+        BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.dispose', StandardMessageCodec());
     final Map<Object, Object> replyMap = await channel.send(null) as Map<Object, Object>;
     if (replyMap == null) {
       throw PlatformException(
@@ -87,7 +87,7 @@ class FitnessApi {
   Future<ListActivityLogsResponse> listActivityLogs(ListActivityLogsReuqest arg) async {
     final Object encoded = arg.encode();
     const BasicMessageChannel<Object> channel =
-        BasicMessageChannel<Object>('dev.flutter.pigeon.FitnessApi.listActivityLogs', StandardMessageCodec());
+        BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.listActivityLogs', StandardMessageCodec());
     final Map<Object, Object> replyMap = await channel.send(encoded) as Map<Object, Object>;
     if (replyMap == null) {
       throw PlatformException(

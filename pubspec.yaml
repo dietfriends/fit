@@ -1,4 +1,4 @@
-name: fitness
+name: fit
 description: Flutter SDK for iOS HealthKit, Android GoogleFit services and Samsung Health.
 version: 0.0.1-alpha.1
 homepage: https://github.com/dietfriends/fitness
@@ -32,10 +32,10 @@ flutter:
     # https://flutter.dev/docs/development/packages-and-plugins/developing-packages#plugin-platforms
     # -------------------
       android:
-        package: kr.dietfriends.plugins.fitness
-        pluginClass: FitnessPlugin
+        package: kr.dietfriends.plugins.fit
+        pluginClass: FitPlugin
       ios:
-        pluginClass: FitnessPlugin
+        pluginClass: FitPlugin
     # -------------------
 
   # To add assets to your plugin package, add an assets section, like this:

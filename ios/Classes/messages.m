@@ -59,11 +59,11 @@ static NSDictionary* wrapResult(NSDictionary *result, FlutterError *error) {
 }
 @end
 
-void FLTFitnessApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitnessApi> api) {
+void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> api) {
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.FitnessApi.initialize"
+        messageChannelWithName:@"dev.flutter.pigeon.FitApi.initialize"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -79,7 +79,7 @@ void FLTFitnessApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitnes
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.FitnessApi.dispose"
+        messageChannelWithName:@"dev.flutter.pigeon.FitApi.dispose"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -95,7 +95,7 @@ void FLTFitnessApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitnes
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.FitnessApi.listActivityLogs"
+        messageChannelWithName:@"dev.flutter.pigeon.FitApi.listActivityLogs"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {

@@ -18,12 +18,12 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString * startDate;
 @end
 
-@protocol FLTFitnessApi
+@protocol FLTFitApi
 -(void)initialize:(FlutterError *_Nullable *_Nonnull)error;
 -(void)dispose:(FlutterError *_Nullable *_Nonnull)error;
 -(nullable FLTListActivityLogsResponse *)listActivityLogs:(FLTListActivityLogsReuqest*)input error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
-extern void FLTFitnessApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitnessApi> _Nullable api);
+extern void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> _Nullable api);
 
 NS_ASSUME_NONNULL_END

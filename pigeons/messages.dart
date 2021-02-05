@@ -29,8 +29,8 @@ class ListActivityLogsReuqest {
   String startDate;
 }
 
-@HostApi(dartHostTestHandler: 'TestHostFitnessApi')
-abstract class FitnessApi {
+@HostApi(dartHostTestHandler: 'TestHostFitApi')
+abstract class FitApi {
   void initialize();
 
   void dispose();
@@ -44,6 +44,6 @@ void configurePigeon(PigeonOptions opts) {
   opts.objcSourceOut = 'ios/Classes/messages.m';
   opts.objcOptions.prefix = 'FLT';
   opts.javaOut =
-      'android/src/main/java/kr/dietfriends/plugins/fitness/Messages.java';
-  opts.javaOptions.package = 'kr.dietfriends.plugins.fitness';
+      'android/src/main/java/kr/dietfriends/plugins/fit/Messages.java';
+  opts.javaOptions.package = 'kr.dietfriends.plugins.fit';
 }
