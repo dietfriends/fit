@@ -1,4 +1,4 @@
-group 'kr.dietfriends.fitness'
+group 'kr.dietfriends.plugins.fit'
 version '1.0-SNAPSHOT'
 
 buildscript {
