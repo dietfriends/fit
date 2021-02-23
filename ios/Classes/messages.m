@@ -22,6 +22,14 @@ static NSDictionary* wrapResult(NSDictionary *result, FlutterError *error) {
       nil];
 }
 
+@interface FLTActivityType ()
++(FLTActivityType*)fromMap:(NSDictionary*)dict;
+-(NSDictionary*)toMap;
+@end
+@interface FLTUint8List ()
++(FLTUint8List*)fromMap:(NSDictionary*)dict;
+-(NSDictionary*)toMap;
+@end
 @interface FLTListActivityLogsResponse ()
 +(FLTListActivityLogsResponse*)fromMap:(NSDictionary*)dict;
 -(NSDictionary*)toMap;
@@ -29,6 +37,42 @@ static NSDictionary* wrapResult(NSDictionary *result, FlutterError *error) {
 @interface FLTListActivityLogsReuqest ()
 +(FLTListActivityLogsReuqest*)fromMap:(NSDictionary*)dict;
 -(NSDictionary*)toMap;
+@end
+
+@implementation FLTActivityType
++(FLTActivityType*)fromMap:(NSDictionary*)dict {
+  FLTActivityType* result = [[FLTActivityType alloc] init];
+  result.source = dict[@"source"];
+  if ((NSNull *)result.source == [NSNull null]) {
+    result.source = nil;
+  }
+  result.name = dict[@"name"];
+  if ((NSNull *)result.name == [NSNull null]) {
+    result.name = nil;
+  }
+  result.code = dict[@"code"];
+  if ((NSNull *)result.code == [NSNull null]) {
+    result.code = nil;
+  }
+  return result;
+}
+-(NSDictionary*)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.source ? self.source : [NSNull null]), @"source", (self.name ? self.name : [NSNull null]), @"name", (self.code ? self.code : [NSNull null]), @"code", nil];
+}
+@end
+
+@implementation FLTUint8List
++(FLTUint8List*)fromMap:(NSDictionary*)dict {
+  FLTUint8List* result = [[FLTUint8List alloc] init];
+  result.bytesPerElement = dict[@"bytesPerElement"];
+  if ((NSNull *)result.bytesPerElement == [NSNull null]) {
+    result.bytesPerElement = nil;
+  }
+  return result;
+}
+-(NSDictionary*)toMap {
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.bytesPerElement ? self.bytesPerElement : [NSNull null]), @"bytesPerElement", nil];
+}
 @end
 
 @implementation FLTListActivityLogsResponse
@@ -86,6 +130,23 @@ void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> ap
         FlutterError *error;
         [api dispose:&error];
         callback(wrapResult(nil, error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.FitApi.getActivityType"
+        binaryMessenger:binaryMessenger];
+    if (api) {
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FlutterError *error;
+        FLTUint8List *input = [FLTUint8List fromMap:message];
+        FLTActivityType *output = [api getActivityType:input error:&error];
+        callback(wrapResult([output toMap], error));
       }];
     }
     else {

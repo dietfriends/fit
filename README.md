@@ -1,4 +1,14 @@
 # fitness
 
-Flutter SDK for iOS HealthKit, Android GoogleFit services and Samsung Health.
+## Develop
 
+### Get dependencies
+```bash
+flutter pub get
+```
+
+### Generate Pigeon
+
+```bash
+tool/pigeon.sh
+```

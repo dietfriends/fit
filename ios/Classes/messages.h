@@ -7,8 +7,20 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+@class FLTActivityType;
+@class FLTUint8List;
 @class FLTListActivityLogsResponse;
 @class FLTListActivityLogsReuqest;
+
+@interface FLTActivityType : NSObject
+@property(nonatomic, copy, nullable) NSString * source;
+@property(nonatomic, copy, nullable) NSString * name;
+@property(nonatomic, strong, nullable) NSNumber * code;
+@end
+
+@interface FLTUint8List : NSObject
+@property(nonatomic, strong, nullable) NSNumber * bytesPerElement;
+@end
 
 @interface FLTListActivityLogsResponse : NSObject
 @property(nonatomic, strong, nullable) NSArray * activityLogs;
@@ -21,6 +33,7 @@ NS_ASSUME_NONNULL_BEGIN
 @protocol FLTFitApi
 -(void)initialize:(FlutterError *_Nullable *_Nonnull)error;
 -(void)dispose:(FlutterError *_Nullable *_Nonnull)error;
+-(nullable FLTActivityType *)getActivityType:(FLTUint8List*)input error:(FlutterError *_Nullable *_Nonnull)error;
 -(nullable FLTListActivityLogsResponse *)listActivityLogs:(FLTListActivityLogsReuqest*)input error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 

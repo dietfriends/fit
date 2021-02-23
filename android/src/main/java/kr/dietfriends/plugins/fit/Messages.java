@@ -14,6 +14,58 @@ import java.util.HashMap;
 public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
+  public static class ActivityType {
+    private String source;
+    public String getSource() { return source; }
+    public void setSource(String setterArg) { this.source = setterArg; }
+
+    private String name;
+    public String getName() { return name; }
+    public void setName(String setterArg) { this.name = setterArg; }
+
+    private Long code;
+    public Long getCode() { return code; }
+    public void setCode(Long setterArg) { this.code = setterArg; }
+
+    HashMap toMap() {
+      HashMap<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("source", source);
+      toMapResult.put("name", name);
+      toMapResult.put("code", code);
+      return toMapResult;
+    }
+    static ActivityType fromMap(HashMap map) {
+      ActivityType fromMapResult = new ActivityType();
+      Object source = map.get("source");
+      fromMapResult.source = (String)source;
+      Object name = map.get("name");
+      fromMapResult.name = (String)name;
+      Object code = map.get("code");
+      fromMapResult.code = (code == null) ? null : ((code instanceof Integer) ? (Integer)code : (Long)code);
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class Uint8List {
+    private Long bytesPerElement;
+    public Long getBytesPerElement() { return bytesPerElement; }
+    public void setBytesPerElement(Long setterArg) { this.bytesPerElement = setterArg; }
+
+    HashMap toMap() {
+      HashMap<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("bytesPerElement", bytesPerElement);
+      return toMapResult;
+    }
+    static Uint8List fromMap(HashMap map) {
+      Uint8List fromMapResult = new Uint8List();
+      Object bytesPerElement = map.get("bytesPerElement");
+      fromMapResult.bytesPerElement = (bytesPerElement == null) ? null : ((bytesPerElement instanceof Integer) ? (Integer)bytesPerElement : (Long)bytesPerElement);
+      return fromMapResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
   public static class ListActivityLogsResponse {
     private ArrayList activityLogs;
     public ArrayList getActivityLogs() { return activityLogs; }
@@ -55,6 +107,7 @@ public class Messages {
   public interface FitApi {
     void initialize();
     void dispose();
+    ActivityType getActivityType(Uint8List arg);
     ListActivityLogsResponse listActivityLogs(ListActivityLogsReuqest arg);
 
     /** Sets up an instance of `FitApi` to handle messages through the `binaryMessenger` */
@@ -87,6 +140,27 @@ public class Messages {
             try {
               api.dispose();
               wrapped.put("result", null);
+            }
+            catch (Exception exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FitApi.getActivityType", new StandardMessageCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            HashMap<String, HashMap> wrapped = new HashMap<>();
+            try {
+              @SuppressWarnings("ConstantConditions")
+              Uint8List input = Uint8List.fromMap((HashMap)message);
+              ActivityType output = api.getActivityType(input);
+              wrapped.put("result", output.toMap());
             }
             catch (Exception exception) {
               wrapped.put("error", wrapError(exception));

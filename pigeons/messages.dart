@@ -11,6 +11,7 @@ class ActivityLog {
 
   /// 운동 시간
   String duration;
+
   // The total distance traveled
   /// 이동 거리
   String totalDistance;
@@ -29,11 +30,24 @@ class ListActivityLogsReuqest {
   String startDate;
 }
 
+class ActivityType {
+  String source;
+  String name;
+  int code;
+}
+
+class GetActivityTypeRequest {
+  String source;
+  int code;
+}
+
 @HostApi(dartHostTestHandler: 'TestHostFitApi')
 abstract class FitApi {
   void initialize();
 
   void dispose();
+
+  ActivityType getActivityType(GetActivityTypeRequest request);
 
   ListActivityLogsResponse listActivityLogs(ListActivityLogsReuqest request);
 }

@@ -5,45 +5,15 @@
 import 'dart:async';
 import 'dart:typed_data' show Uint8List, Int32List, Int64List, Float64List;
 
+import 'package:fit/src/generated/messages.pb.dart';
 import 'package:flutter/services.dart';
-
-class ListActivityLogsResponse {
-  List<Object> activityLogs;
-
-  Object encode() {
-    final Map<Object, Object> pigeonMap = <Object, Object>{};
-    pigeonMap['activityLogs'] = activityLogs;
-    return pigeonMap;
-  }
-
-  static ListActivityLogsResponse decode(Object message) {
-    final Map<Object, Object> pigeonMap = message as Map<Object, Object>;
-    return ListActivityLogsResponse()
-      ..activityLogs = pigeonMap['activityLogs'] as List<Object>;
-  }
-}
-
-class ListActivityLogsReuqest {
-  String startDate;
-
-  Object encode() {
-    final Map<Object, Object> pigeonMap = <Object, Object>{};
-    pigeonMap['startDate'] = startDate;
-    return pigeonMap;
-  }
-
-  static ListActivityLogsReuqest decode(Object message) {
-    final Map<Object, Object> pigeonMap = message as Map<Object, Object>;
-    return ListActivityLogsReuqest()
-      ..startDate = pigeonMap['startDate'] as String;
-  }
-}
 
 class FitApi {
   Future<void> initialize() async {
-    const BasicMessageChannel<Object> channel =
-        BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.initialize', StandardMessageCodec());
-    final Map<Object, Object> replyMap = await channel.send(null) as Map<Object, Object>;
+    const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+        'dev.flutter.pigeon.FitApi.initialize', StandardMessageCodec());
+    final Map<Object, Object> replyMap =
+        await channel.send(null) as Map<Object, Object>;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -51,7 +21,8 @@ class FitApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object, Object> error = replyMap['error'] as Map<Object, Object>;
+      final Map<Object, Object> error =
+          replyMap['error'] as Map<Object, Object>;
       throw PlatformException(
         code: error['code'] as String,
         message: error['message'] as String,
@@ -63,9 +34,10 @@ class FitApi {
   }
 
   Future<void> dispose() async {
-    const BasicMessageChannel<Object> channel =
-        BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.dispose', StandardMessageCodec());
-    final Map<Object, Object> replyMap = await channel.send(null) as Map<Object, Object>;
+    const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+        'dev.flutter.pigeon.FitApi.dispose', StandardMessageCodec());
+    final Map<Object, Object> replyMap =
+        await channel.send(null) as Map<Object, Object>;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -73,7 +45,8 @@ class FitApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object, Object> error = replyMap['error'] as Map<Object, Object>;
+      final Map<Object, Object> error =
+          replyMap['error'] as Map<Object, Object>;
       throw PlatformException(
         code: error['code'] as String,
         message: error['message'] as String,
@@ -84,11 +57,12 @@ class FitApi {
     }
   }
 
-  Future<ListActivityLogsResponse> listActivityLogs(ListActivityLogsReuqest arg) async {
+  Future<ActivityType> getActivityType(Uint8List arg) async {
     final Object encoded = arg.encode();
-    const BasicMessageChannel<Object> channel =
-        BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.listActivityLogs', StandardMessageCodec());
-    final Map<Object, Object> replyMap = await channel.send(encoded) as Map<Object, Object>;
+    const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+        'dev.flutter.pigeon.FitApi.getActivityType', StandardMessageCodec());
+    final Map<Object, Object> replyMap =
+        await channel.send(encoded) as Map<Object, Object>;
     if (replyMap == null) {
       throw PlatformException(
         code: 'channel-error',
@@ -96,14 +70,41 @@ class FitApi {
         details: null,
       );
     } else if (replyMap['error'] != null) {
-      final Map<Object, Object> error = replyMap['error'] as Map<Object, Object>;
+      final Map<Object, Object> error =
+          replyMap['error'] as Map<Object, Object>;
       throw PlatformException(
         code: error['code'] as String,
         message: error['message'] as String,
         details: error['details'],
       );
     } else {
-      return ListActivityLogsResponse.decode(replyMap['result']);
+      return ActivityType.decode(replyMap['result']);
+    }
+  }
+
+  Future<ListActivityLogsResponse> listActivityLogs(
+      ListActivityLogsReuqest arg) async {
+    final Object encoded = arg.encode();
+    const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+        'dev.flutter.pigeon.FitApi.listActivityLogs', StandardMessageCodec());
+    final Map<Object, Object> replyMap =
+        await channel.send(encoded) as Map<Object, Object>;
+    if (replyMap == null) {
+      throw PlatformException(
+        code: 'channel-error',
+        message: 'Unable to establish connection on channel.',
+        details: null,
+      );
+    } else if (replyMap['error'] != null) {
+      final Map<Object, Object> error =
+          replyMap['error'] as Map<Object, Object>;
+      throw PlatformException(
+        code: error['code'] as String,
+        message: error['message'] as String,
+        details: error['details'],
+      );
+    } else {
+      return ListActivityLogsResponse.fromBuffer(replyMap['result']);
     }
   }
 }
