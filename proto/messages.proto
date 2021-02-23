@@ -30,3 +30,8 @@ message ActivityLog {
 message ListActivityLogsResponse {
   repeated ActivityLog activityLogs = 1;
 }
+
+message ListActivityLogsRequest {
+  int32 startTime = 1;
+  int32 endTime = 2;
+}

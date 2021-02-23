@@ -1,12 +1,41 @@
 import Flutter
 import UIKit
 import HealthKit
+//import SwiftProtobuf
 
 // Imple
-class SwiftFitApi: NSObject, FLTFitApi {
-    func getActivityType(_ input: FLTGetActivityTypeRequest, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> FLTActivityType? {
-        HKWorkoutActivityType.
+class SwiftFitPlugin: NSObject, FlutterPlugin, FLTFitApi {
+    public static func register(with registrar: FlutterPluginRegistrar) {
+      let messenger : FlutterBinaryMessenger = registrar.messenger()
+      let api : FLTFitApi = SwiftFitPlugin()
+      FLTFitApiSetup(messenger, api)
     }
+    func getActivityType(_ input: FLTProtoWrapper, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> FLTProtoWrapper? {
+        return nil
+    }
+    
+    func listActivityLogs(_ input: FLTProtoWrapper, error flutterError: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> FLTProtoWrapper? {
+        do {
+        /*
+            let protobuf : FlutterStandardTypedData = input.proto!
+        
+            _ = try Dietfriends_Fitness_ListActivityLogsRequest(serializedData: protobuf.data)
+        
+            var response = Dietfriends_Fitness_ListActivityLogsResponse()
+            response.activityLogs = [];
+            let binaryData: Data = try response.serializedData()
+
+            let wrap = FLTProtoWrapper()
+            wrap.proto = FlutterStandardTypedData(bytes: binaryData)
+            return wrap*/
+            return nil
+        } catch {
+            flutterError.pointee = FlutterError(code: "Error", message: "", details: "")
+            return nil
+        }
+    }
+    
+
     
     func initialize(_ error: AutoreleasingUnsafeMutablePointer<FlutterError?>) {
         
@@ -16,113 +45,11 @@ class SwiftFitApi: NSObject, FLTFitApi {
         
     }
     
-    func listActivityLogs(_ input: FLTListActivityLogsReuqest, error: AutoreleasingUnsafeMutablePointer<FlutterError?>) -> FLTListActivityLogsResponse? {
-        return FLTListActivityLogsResponse()
-    }
-    
+
 
 }
 
-public class SwiftFitPlugin: NSObject, FlutterPlugin {
-  public static func register(with registrar: FlutterPluginRegistrar) {
-    let instance = SwiftFitApi()
 
-    FLTFitApiSetup(registrar.messenger(), instance)
-  }
-}
 
-extension HKWorkoutActivityType {
     
-    /*
-     Simple mapping of available workout types to a human readable name.
-     */
-    var name: String {
-        switch self {
-        case .americanFootball:             return "American Football"
-        case .archery:                      return "Archery"
-        case .australianFootball:           return "Australian Football"
-        case .badminton:                    return "Badminton"
-        case .baseball:                     return "Baseball"
-        case .basketball:                   return "Basketball"
-        case .bowling:                      return "Bowling"
-        case .boxing:                       return "Boxing"
-        case .climbing:                     return "Climbing"
-        case .crossTraining:                return "Cross Training"
-        case .curling:                      return "Curling"
-        case .cycling:                      return "Cycling"
-        case .dance:                        return "Dance"
-        case .danceInspiredTraining:        return "Dance Inspired Training"
-        case .elliptical:                   return "Elliptical"
-        case .equestrianSports:             return "Equestrian Sports"
-        case .fencing:                      return "Fencing"
-        case .fishing:                      return "Fishing"
-        case .functionalStrengthTraining:   return "Functional Strength Training"
-        case .golf:                         return "Golf"
-        case .gymnastics:                   return "Gymnastics"
-        case .handball:                     return "Handball"
-        case .hiking:                       return "Hiking"
-        case .hockey:                       return "Hockey"
-        case .hunting:                      return "Hunting"
-        case .lacrosse:                     return "Lacrosse"
-        case .martialArts:                  return "Martial Arts"
-        case .mindAndBody:                  return "Mind and Body"
-        case .mixedMetabolicCardioTraining: return "Mixed Metabolic Cardio Training"
-        case .paddleSports:                 return "Paddle Sports"
-        case .play:                         return "Play"
-        case .preparationAndRecovery:       return "Preparation and Recovery"
-        case .racquetball:                  return "Racquetball"
-        case .rowing:                       return "Rowing"
-        case .rugby:                        return "Rugby"
-        case .running:                      return "Running"
-        case .sailing:                      return "Sailing"
-        case .skatingSports:                return "Skating Sports"
-        case .snowSports:                   return "Snow Sports"
-        case .soccer:                       return "Soccer"
-        case .softball:                     return "Softball"
-        case .squash:                       return "Squash"
-        case .stairClimbing:                return "Stair Climbing"
-        case .surfingSports:                return "Surfing Sports"
-        case .swimming:                     return "Swimming"
-        case .tableTennis:                  return "Table Tennis"
-        case .tennis:                       return "Tennis"
-        case .trackAndField:                return "Track and Field"
-        case .traditionalStrengthTraining:  return "Traditional Strength Training"
-        case .volleyball:                   return "Volleyball"
-        case .walking:                      return "Walking"
-        case .waterFitness:                 return "Water Fitness"
-        case .waterPolo:                    return "Water Polo"
-        case .waterSports:                  return "Water Sports"
-        case .wrestling:                    return "Wrestling"
-        case .yoga:                         return "Yoga"
 
-        // iOS 10
-        case .barre:                        return "Barre"
-        case .coreTraining:                 return "Core Training"
-        case .crossCountrySkiing:           return "Cross Country Skiing"
-        case .downhillSkiing:               return "Downhill Skiing"
-        case .flexibility:                  return "Flexibility"
-        case .highIntensityIntervalTraining:    return "High Intensity Interval Training"
-        case .jumpRope:                     return "Jump Rope"
-        case .kickboxing:                   return "Kickboxing"
-        case .pilates:                      return "Pilates"
-        case .snowboarding:                 return "Snowboarding"
-        case .stairs:                       return "Stairs"
-        case .stepTraining:                 return "Step Training"
-        case .wheelchairWalkPace:           return "Wheelchair Walk Pace"
-        case .wheelchairRunPace:            return "Wheelchair Run Pace"
-
-        // iOS 11
-        case .taiChi:                       return "Tai Chi"
-        case .mixedCardio:                  return "Mixed Cardio"
-        case .handCycling:                  return "Hand Cycling"
-
-        // iOS 13
-        case .discSports:                   return "Disc Sports"
-        case .fitnessGaming:                return "Fitness Gaming"
-
-        // Catch-all
-        default:                            return "Other"
-        }
-    }
-    
-}

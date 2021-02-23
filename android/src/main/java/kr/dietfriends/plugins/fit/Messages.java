@@ -14,91 +14,20 @@ import java.util.HashMap;
 public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static class ActivityType {
-    private String source;
-    public String getSource() { return source; }
-    public void setSource(String setterArg) { this.source = setterArg; }
-
-    private String name;
-    public String getName() { return name; }
-    public void setName(String setterArg) { this.name = setterArg; }
-
-    private Long code;
-    public Long getCode() { return code; }
-    public void setCode(Long setterArg) { this.code = setterArg; }
+  public static class ProtoWrapper {
+    private byte[] proto;
+    public byte[] getProto() { return proto; }
+    public void setProto(byte[] setterArg) { this.proto = setterArg; }
 
     HashMap toMap() {
       HashMap<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("source", source);
-      toMapResult.put("name", name);
-      toMapResult.put("code", code);
+      toMapResult.put("proto", proto);
       return toMapResult;
     }
-    static ActivityType fromMap(HashMap map) {
-      ActivityType fromMapResult = new ActivityType();
-      Object source = map.get("source");
-      fromMapResult.source = (String)source;
-      Object name = map.get("name");
-      fromMapResult.name = (String)name;
-      Object code = map.get("code");
-      fromMapResult.code = (code == null) ? null : ((code instanceof Integer) ? (Integer)code : (Long)code);
-      return fromMapResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static class Uint8List {
-    private Long bytesPerElement;
-    public Long getBytesPerElement() { return bytesPerElement; }
-    public void setBytesPerElement(Long setterArg) { this.bytesPerElement = setterArg; }
-
-    HashMap toMap() {
-      HashMap<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("bytesPerElement", bytesPerElement);
-      return toMapResult;
-    }
-    static Uint8List fromMap(HashMap map) {
-      Uint8List fromMapResult = new Uint8List();
-      Object bytesPerElement = map.get("bytesPerElement");
-      fromMapResult.bytesPerElement = (bytesPerElement == null) ? null : ((bytesPerElement instanceof Integer) ? (Integer)bytesPerElement : (Long)bytesPerElement);
-      return fromMapResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static class ListActivityLogsResponse {
-    private ArrayList activityLogs;
-    public ArrayList getActivityLogs() { return activityLogs; }
-    public void setActivityLogs(ArrayList setterArg) { this.activityLogs = setterArg; }
-
-    HashMap toMap() {
-      HashMap<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("activityLogs", activityLogs);
-      return toMapResult;
-    }
-    static ListActivityLogsResponse fromMap(HashMap map) {
-      ListActivityLogsResponse fromMapResult = new ListActivityLogsResponse();
-      Object activityLogs = map.get("activityLogs");
-      fromMapResult.activityLogs = (ArrayList)activityLogs;
-      return fromMapResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static class ListActivityLogsReuqest {
-    private String startDate;
-    public String getStartDate() { return startDate; }
-    public void setStartDate(String setterArg) { this.startDate = setterArg; }
-
-    HashMap toMap() {
-      HashMap<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("startDate", startDate);
-      return toMapResult;
-    }
-    static ListActivityLogsReuqest fromMap(HashMap map) {
-      ListActivityLogsReuqest fromMapResult = new ListActivityLogsReuqest();
-      Object startDate = map.get("startDate");
-      fromMapResult.startDate = (String)startDate;
+    static ProtoWrapper fromMap(HashMap map) {
+      ProtoWrapper fromMapResult = new ProtoWrapper();
+      Object proto = map.get("proto");
+      fromMapResult.proto = (byte[])proto;
       return fromMapResult;
     }
   }
@@ -107,8 +36,8 @@ public class Messages {
   public interface FitApi {
     void initialize();
     void dispose();
-    ActivityType getActivityType(Uint8List arg);
-    ListActivityLogsResponse listActivityLogs(ListActivityLogsReuqest arg);
+    ProtoWrapper getActivityType(ProtoWrapper arg);
+    ProtoWrapper listActivityLogs(ProtoWrapper arg);
 
     /** Sets up an instance of `FitApi` to handle messages through the `binaryMessenger` */
     static void setup(BinaryMessenger binaryMessenger, FitApi api) {
@@ -158,8 +87,8 @@ public class Messages {
             HashMap<String, HashMap> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              Uint8List input = Uint8List.fromMap((HashMap)message);
-              ActivityType output = api.getActivityType(input);
+              ProtoWrapper input = ProtoWrapper.fromMap((HashMap)message);
+              ProtoWrapper output = api.getActivityType(input);
               wrapped.put("result", output.toMap());
             }
             catch (Exception exception) {
@@ -179,8 +108,8 @@ public class Messages {
             HashMap<String, HashMap> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              ListActivityLogsReuqest input = ListActivityLogsReuqest.fromMap((HashMap)message);
-              ListActivityLogsResponse output = api.listActivityLogs(input);
+              ProtoWrapper input = ProtoWrapper.fromMap((HashMap)message);
+              ProtoWrapper output = api.listActivityLogs(input);
               wrapped.put("result", output.toMap());
             }
             catch (Exception exception) {

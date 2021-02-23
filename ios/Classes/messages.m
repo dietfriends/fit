@@ -22,84 +22,22 @@ static NSDictionary* wrapResult(NSDictionary *result, FlutterError *error) {
       nil];
 }
 
-@interface FLTActivityType ()
-+(FLTActivityType*)fromMap:(NSDictionary*)dict;
--(NSDictionary*)toMap;
-@end
-@interface FLTUint8List ()
-+(FLTUint8List*)fromMap:(NSDictionary*)dict;
--(NSDictionary*)toMap;
-@end
-@interface FLTListActivityLogsResponse ()
-+(FLTListActivityLogsResponse*)fromMap:(NSDictionary*)dict;
--(NSDictionary*)toMap;
-@end
-@interface FLTListActivityLogsReuqest ()
-+(FLTListActivityLogsReuqest*)fromMap:(NSDictionary*)dict;
+@interface FLTProtoWrapper ()
++(FLTProtoWrapper*)fromMap:(NSDictionary*)dict;
 -(NSDictionary*)toMap;
 @end
 
-@implementation FLTActivityType
-+(FLTActivityType*)fromMap:(NSDictionary*)dict {
-  FLTActivityType* result = [[FLTActivityType alloc] init];
-  result.source = dict[@"source"];
-  if ((NSNull *)result.source == [NSNull null]) {
-    result.source = nil;
-  }
-  result.name = dict[@"name"];
-  if ((NSNull *)result.name == [NSNull null]) {
-    result.name = nil;
-  }
-  result.code = dict[@"code"];
-  if ((NSNull *)result.code == [NSNull null]) {
-    result.code = nil;
+@implementation FLTProtoWrapper
++(FLTProtoWrapper*)fromMap:(NSDictionary*)dict {
+  FLTProtoWrapper* result = [[FLTProtoWrapper alloc] init];
+  result.proto = dict[@"proto"];
+  if ((NSNull *)result.proto == [NSNull null]) {
+    result.proto = nil;
   }
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.source ? self.source : [NSNull null]), @"source", (self.name ? self.name : [NSNull null]), @"name", (self.code ? self.code : [NSNull null]), @"code", nil];
-}
-@end
-
-@implementation FLTUint8List
-+(FLTUint8List*)fromMap:(NSDictionary*)dict {
-  FLTUint8List* result = [[FLTUint8List alloc] init];
-  result.bytesPerElement = dict[@"bytesPerElement"];
-  if ((NSNull *)result.bytesPerElement == [NSNull null]) {
-    result.bytesPerElement = nil;
-  }
-  return result;
-}
--(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.bytesPerElement ? self.bytesPerElement : [NSNull null]), @"bytesPerElement", nil];
-}
-@end
-
-@implementation FLTListActivityLogsResponse
-+(FLTListActivityLogsResponse*)fromMap:(NSDictionary*)dict {
-  FLTListActivityLogsResponse* result = [[FLTListActivityLogsResponse alloc] init];
-  result.activityLogs = dict[@"activityLogs"];
-  if ((NSNull *)result.activityLogs == [NSNull null]) {
-    result.activityLogs = nil;
-  }
-  return result;
-}
--(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.activityLogs ? self.activityLogs : [NSNull null]), @"activityLogs", nil];
-}
-@end
-
-@implementation FLTListActivityLogsReuqest
-+(FLTListActivityLogsReuqest*)fromMap:(NSDictionary*)dict {
-  FLTListActivityLogsReuqest* result = [[FLTListActivityLogsReuqest alloc] init];
-  result.startDate = dict[@"startDate"];
-  if ((NSNull *)result.startDate == [NSNull null]) {
-    result.startDate = nil;
-  }
-  return result;
-}
--(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.startDate ? self.startDate : [NSNull null]), @"startDate", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.proto ? self.proto : [NSNull null]), @"proto", nil];
 }
 @end
 
@@ -144,8 +82,8 @@ void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> ap
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
-        FLTUint8List *input = [FLTUint8List fromMap:message];
-        FLTActivityType *output = [api getActivityType:input error:&error];
+        FLTProtoWrapper *input = [FLTProtoWrapper fromMap:message];
+        FLTProtoWrapper *output = [api getActivityType:input error:&error];
         callback(wrapResult([output toMap], error));
       }];
     }
@@ -161,8 +99,8 @@ void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> ap
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
-        FLTListActivityLogsReuqest *input = [FLTListActivityLogsReuqest fromMap:message];
-        FLTListActivityLogsResponse *output = [api listActivityLogs:input error:&error];
+        FLTProtoWrapper *input = [FLTProtoWrapper fromMap:message];
+        FLTProtoWrapper *output = [api listActivityLogs:input error:&error];
         callback(wrapResult([output toMap], error));
       }];
     }

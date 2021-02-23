@@ -7,34 +7,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FLTActivityType;
-@class FLTUint8List;
-@class FLTListActivityLogsResponse;
-@class FLTListActivityLogsReuqest;
+@class FLTProtoWrapper;
 
-@interface FLTActivityType : NSObject
-@property(nonatomic, copy, nullable) NSString * source;
-@property(nonatomic, copy, nullable) NSString * name;
-@property(nonatomic, strong, nullable) NSNumber * code;
-@end
-
-@interface FLTUint8List : NSObject
-@property(nonatomic, strong, nullable) NSNumber * bytesPerElement;
-@end
-
-@interface FLTListActivityLogsResponse : NSObject
-@property(nonatomic, strong, nullable) NSArray * activityLogs;
-@end
-
-@interface FLTListActivityLogsReuqest : NSObject
-@property(nonatomic, copy, nullable) NSString * startDate;
+@interface FLTProtoWrapper : NSObject
+@property(nonatomic, strong, nullable) FlutterStandardTypedData * proto;
 @end
 
 @protocol FLTFitApi
 -(void)initialize:(FlutterError *_Nullable *_Nonnull)error;
 -(void)dispose:(FlutterError *_Nullable *_Nonnull)error;
--(nullable FLTActivityType *)getActivityType:(FLTUint8List*)input error:(FlutterError *_Nullable *_Nonnull)error;
--(nullable FLTListActivityLogsResponse *)listActivityLogs:(FLTListActivityLogsReuqest*)input error:(FlutterError *_Nullable *_Nonnull)error;
+-(nullable FLTProtoWrapper *)getActivityType:(FLTProtoWrapper*)input error:(FlutterError *_Nullable *_Nonnull)error;
+-(nullable FLTProtoWrapper *)listActivityLogs:(FLTProtoWrapper*)input error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> _Nullable api);

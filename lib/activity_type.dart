@@ -1,3 +1,5 @@
+import 'package:fit/apple_activity_type.dart';
+
 /// https://img-developer.samsung.com/onlinedocs/health/android/data/EXERCISE_TYPE.html
 /// https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype
 /// https://developers.google.com/fit/rest/v1/reference/activity-types
@@ -5,22 +7,17 @@
 class ActivityType {
   final String name;
 
-  final String category;
-
   // id
   final int id;
 
   // Source of Activity Type; google, apple, samsung
   final String source;
 
-  const ActivityType(this.source, this.category, this.name, this.id);
+  const ActivityType(this.source, this.name, this.id);
 
-  const ActivityType.google(this.name, this.id)
-      : source = 'google',
-        category = 'general';
+  const ActivityType.google(this.name, this.id) : source = 'google';
 
-  const ActivityType.apple(this.category, this.name, this.id)
-      : source = 'apple';
+  const ActivityType.apple(this.name, this.id) : source = 'apple';
 
   static ActivityType fromGoogle(int activityId) {
     switch (activityId) {
@@ -76,12 +73,7 @@ class ActivityType {
     35: 'Hiking',
   };
 
-  static const _apple = {
-    2: ActivityType.apple('Individual Sports', 'Archery', 2),
-    7: ActivityType.apple('Individual Sports', 'Bowling', 7),
-    18: ActivityType.apple('Individual Sports', 'Fencing', 18),
-    22: ActivityType.apple('Individual Sports', 'Gymnastics', 22),
-  };
+  //static final _apple = AppleActivityType.values.map((e) => ActivityType.apple(e., id))
 }
 
 // Google

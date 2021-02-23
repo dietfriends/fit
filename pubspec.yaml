@@ -11,11 +11,15 @@ dependencies:
   flutter:
     sdk: flutter
   protobuf:
+  freezed_annotation:
+  recase: ^3.0.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   pigeon:
+  freezed:
+  build_runner:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

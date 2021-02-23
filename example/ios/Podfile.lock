@@ -1,21 +1,28 @@
 PODS:
-  - fitness (0.0.1):
+  - fit (0.0.1):
     - Flutter
+    - SwiftProtobuf (= 1.15.0)
   - Flutter (1.0.0)
+  - SwiftProtobuf (1.15.0)
 
 DEPENDENCIES:
-  - fitness (from `.symlinks/plugins/fitness/ios`)
+  - fit (from `.symlinks/plugins/fit/ios`)
   - Flutter (from `Flutter`)
 
+SPEC REPOS:
+  trunk:
+    - SwiftProtobuf
+
 EXTERNAL SOURCES:
-  fitness:
-    :path: ".symlinks/plugins/fitness/ios"
+  fit:
+    :path: ".symlinks/plugins/fit/ios"
   Flutter:
     :path: Flutter
 
 SPEC CHECKSUMS:
-  fitness: 46ee847894f81df4a52361fc4242e8cf9a913504
+  fit: 779aeed414784f5766fac2c02e24ac70065588cd
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  SwiftProtobuf: 3320217e9d8fb75f36b40282e78c482640fd75dd
 
 PODFILE CHECKSUM: aafe91acc616949ddb318b77800a7f51bffa2a4c
 

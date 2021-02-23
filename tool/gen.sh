@@ -14,7 +14,7 @@ export PROTO_DIR=/usr/local/include
 
 #export GOOGLEAPIS=${SHELL_PATH}/api-common-protos/google
 #echo $GOOGLEAPIS
-PROTOC="protoc --dart_out=grpc:lib/src/generated -I$PROTO_DIR"
+PROTOC="protoc --dart_out=grpc:lib/src/generated --objc_out=ios/Classes -I$PROTO_DIR"
 PROTOC_KT="protoc --plugin=protoc-gen-grpckt=tool/protoc-gen-grpc-kotlin.sh --grpckt_out=android/src/main/kotlin -I$PROTO_DIR"
 
 #$PROTOC $PROTO_DIR/google/protobuf/any.proto
