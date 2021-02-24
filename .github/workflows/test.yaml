@@ -1,0 +1,44 @@
+name: Test and coverage
+
+on:
+  push:
+    branches:
+      - main
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: test
+    runs-on: ubuntu-latest
+
+    container:
+      image: cirrusci/flutter:latest
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install dependencies
+        run: |
+          flutter pub get
+          flutter pub global activate remove_from_coverage
+
+      - name: Build Runner
+        run: |
+          true || flutter pub run build_runner build
+
+      - name: Run tests
+        run: flutter test --coverage test
+
+      - name: Remove from coverage
+        run: |
+          ${{ matrix.pub }} global run remove_from_coverage -f coverage/lcov.info -r '.freezed.dart$' -r '.g.dart$' -r '^lib/src/generated'
+
+      - name: Upload coverage to codecov
+        uses: codecov/codecov-action@v1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: ./coverage/lcov.info
+

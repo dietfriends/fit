@@ -1,8 +1,7 @@
 import 'package:fit/fit.dart';
+import 'package:fit/messages.dart';
 import 'package:fit/src/generated/messages.pb.dart';
 import 'package:fit/test.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 class _ApiLogger implements TestHostFitApi {

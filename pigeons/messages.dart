@@ -20,8 +20,8 @@ abstract class FitApi {
 }
 
 void configurePigeon(PigeonOptions opts) {
-  opts.dartOut = 'lib/src/messages.dart';
-  opts.dartTestOut = 'lib/src/test.dart';
+  opts.dartOut = 'lib/src/generated/messages.dart';
+  opts.dartTestOut = 'lib/src/generated/test.dart';
   opts.objcHeaderOut = 'ios/Classes/messages.h';
   opts.objcSourceOut = 'ios/Classes/messages.m';
   opts.objcOptions.prefix = 'FLT';

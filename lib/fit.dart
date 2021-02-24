@@ -7,9 +7,7 @@ import 'dart:async';
 
 import 'package:fit/src/generated/messages.pb.dart';
 
-import 'src/messages.dart';
-
-export 'src/messages.dart';
+import 'src/generated/messages.dart';
 
 class Fit {
   static FitApi _apiInstance;
