@@ -28,6 +28,7 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       //platformVersion = await Fit;
+      await Fit.listActivityLogs(null, null);
     } on PlatformException {
       platformVersion = 'Failed to get platform version.';
     }

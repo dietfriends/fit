@@ -1,0 +1,37 @@
+syntax = "proto3";
+
+package dietfriends.fitness;
+option java_multiple_files = true;
+option java_outer_classname = "FitnessProto";
+option java_package = "dietfriends.fitness";
+
+message ActivityLog {
+  // The type of activity performed
+  // 운동 타입
+  string activityType = 1;
+  string activityId = 2;
+
+  /// 운동 소모 칼로리
+  double totalCaloriesBurned = 3;
+
+  /// 운동 시간
+  string duration = 4;
+
+  // The total distance traveled
+  /// 이동 거리
+  string totalDistance = 5;
+
+  // String totalClimed;
+
+  /// Google, Apple, Samsung
+  string source = 6;
+}
+
+message ListActivityLogsResponse {
+  repeated ActivityLog activityLogs = 1;
+}
+
+message ListActivityLogsRequest {
+  int32 startTime = 1;
+  int32 endTime = 2;
+}

@@ -1,6 +1,4 @@
 #import "FitPlugin.h"
-#import "messages.h"
-
 #if __has_include(<fit/fit-Swift.h>)
 #import <fit/fit-Swift.h>
 #else

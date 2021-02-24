@@ -22,40 +22,22 @@ static NSDictionary* wrapResult(NSDictionary *result, FlutterError *error) {
       nil];
 }
 
-@interface FLTListActivityLogsResponse ()
-+(FLTListActivityLogsResponse*)fromMap:(NSDictionary*)dict;
--(NSDictionary*)toMap;
-@end
-@interface FLTListActivityLogsReuqest ()
-+(FLTListActivityLogsReuqest*)fromMap:(NSDictionary*)dict;
+@interface FLTProtoWrapper ()
++(FLTProtoWrapper*)fromMap:(NSDictionary*)dict;
 -(NSDictionary*)toMap;
 @end
 
-@implementation FLTListActivityLogsResponse
-+(FLTListActivityLogsResponse*)fromMap:(NSDictionary*)dict {
-  FLTListActivityLogsResponse* result = [[FLTListActivityLogsResponse alloc] init];
-  result.activityLogs = dict[@"activityLogs"];
-  if ((NSNull *)result.activityLogs == [NSNull null]) {
-    result.activityLogs = nil;
+@implementation FLTProtoWrapper
++(FLTProtoWrapper*)fromMap:(NSDictionary*)dict {
+  FLTProtoWrapper* result = [[FLTProtoWrapper alloc] init];
+  result.proto = dict[@"proto"];
+  if ((NSNull *)result.proto == [NSNull null]) {
+    result.proto = nil;
   }
   return result;
 }
 -(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.activityLogs ? self.activityLogs : [NSNull null]), @"activityLogs", nil];
-}
-@end
-
-@implementation FLTListActivityLogsReuqest
-+(FLTListActivityLogsReuqest*)fromMap:(NSDictionary*)dict {
-  FLTListActivityLogsReuqest* result = [[FLTListActivityLogsReuqest alloc] init];
-  result.startDate = dict[@"startDate"];
-  if ((NSNull *)result.startDate == [NSNull null]) {
-    result.startDate = nil;
-  }
-  return result;
-}
--(NSDictionary*)toMap {
-  return [NSDictionary dictionaryWithObjectsAndKeys:(self.startDate ? self.startDate : [NSNull null]), @"startDate", nil];
+  return [NSDictionary dictionaryWithObjectsAndKeys:(self.proto ? self.proto : [NSNull null]), @"proto", nil];
 }
 @end
 
@@ -95,13 +77,30 @@ void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> ap
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.FitApi.getActivityType"
+        binaryMessenger:binaryMessenger];
+    if (api) {
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FlutterError *error;
+        FLTProtoWrapper *input = [FLTProtoWrapper fromMap:message];
+        FLTProtoWrapper *output = [api getActivityType:input error:&error];
+        callback(wrapResult([output toMap], error));
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
         messageChannelWithName:@"dev.flutter.pigeon.FitApi.listActivityLogs"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FlutterError *error;
-        FLTListActivityLogsReuqest *input = [FLTListActivityLogsReuqest fromMap:message];
-        FLTListActivityLogsResponse *output = [api listActivityLogs:input error:&error];
+        FLTProtoWrapper *input = [FLTProtoWrapper fromMap:message];
+        FLTProtoWrapper *output = [api listActivityLogs:input error:&error];
         callback(wrapResult([output toMap], error));
       }];
     }

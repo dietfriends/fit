@@ -14,39 +14,20 @@ import java.util.HashMap;
 public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static class ListActivityLogsResponse {
-    private ArrayList activityLogs;
-    public ArrayList getActivityLogs() { return activityLogs; }
-    public void setActivityLogs(ArrayList setterArg) { this.activityLogs = setterArg; }
+  public static class ProtoWrapper {
+    private byte[] proto;
+    public byte[] getProto() { return proto; }
+    public void setProto(byte[] setterArg) { this.proto = setterArg; }
 
     HashMap toMap() {
       HashMap<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("activityLogs", activityLogs);
+      toMapResult.put("proto", proto);
       return toMapResult;
     }
-    static ListActivityLogsResponse fromMap(HashMap map) {
-      ListActivityLogsResponse fromMapResult = new ListActivityLogsResponse();
-      Object activityLogs = map.get("activityLogs");
-      fromMapResult.activityLogs = (ArrayList)activityLogs;
-      return fromMapResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static class ListActivityLogsReuqest {
-    private String startDate;
-    public String getStartDate() { return startDate; }
-    public void setStartDate(String setterArg) { this.startDate = setterArg; }
-
-    HashMap toMap() {
-      HashMap<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("startDate", startDate);
-      return toMapResult;
-    }
-    static ListActivityLogsReuqest fromMap(HashMap map) {
-      ListActivityLogsReuqest fromMapResult = new ListActivityLogsReuqest();
-      Object startDate = map.get("startDate");
-      fromMapResult.startDate = (String)startDate;
+    static ProtoWrapper fromMap(HashMap map) {
+      ProtoWrapper fromMapResult = new ProtoWrapper();
+      Object proto = map.get("proto");
+      fromMapResult.proto = (byte[])proto;
       return fromMapResult;
     }
   }
@@ -55,7 +36,8 @@ public class Messages {
   public interface FitApi {
     void initialize();
     void dispose();
-    ListActivityLogsResponse listActivityLogs(ListActivityLogsReuqest arg);
+    ProtoWrapper getActivityType(ProtoWrapper arg);
+    ProtoWrapper listActivityLogs(ProtoWrapper arg);
 
     /** Sets up an instance of `FitApi` to handle messages through the `binaryMessenger` */
     static void setup(BinaryMessenger binaryMessenger, FitApi api) {
@@ -99,14 +81,35 @@ public class Messages {
       }
       {
         BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FitApi.getActivityType", new StandardMessageCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            HashMap<String, HashMap> wrapped = new HashMap<>();
+            try {
+              @SuppressWarnings("ConstantConditions")
+              ProtoWrapper input = ProtoWrapper.fromMap((HashMap)message);
+              ProtoWrapper output = api.getActivityType(input);
+              wrapped.put("result", output.toMap());
+            }
+            catch (Exception exception) {
+              wrapped.put("error", wrapError(exception));
+            }
+            reply.reply(wrapped);
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
             new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FitApi.listActivityLogs", new StandardMessageCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             HashMap<String, HashMap> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
-              ListActivityLogsReuqest input = ListActivityLogsReuqest.fromMap((HashMap)message);
-              ListActivityLogsResponse output = api.listActivityLogs(input);
+              ProtoWrapper input = ProtoWrapper.fromMap((HashMap)message);
+              ProtoWrapper output = api.listActivityLogs(input);
               wrapped.put("result", output.toMap());
             }
             catch (Exception exception) {

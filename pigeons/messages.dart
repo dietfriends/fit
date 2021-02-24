@@ -1,32 +1,11 @@
+// @dart = 2.9
+
+import 'dart:typed_data';
+
 import 'package:pigeon/pigeon_lib.dart';
 
-class ActivityLog {
-  /// The type of activity performed
-  /// 운동 타입
-  String activityType;
-  String activityId;
-
-  /// 운동 소모 칼로리
-  double totalCaloriesBurned;
-
-  /// 운동 시간
-  String duration;
-  // The total distance traveled
-  /// 이동 거리
-  String totalDistance;
-
-  // String totalClimed;
-
-  /// Google, Apple, Samsung
-  String source;
-}
-
-class ListActivityLogsResponse {
-  List<ActivityLog> activityLogs;
-}
-
-class ListActivityLogsReuqest {
-  String startDate;
+class ProtoWrapper {
+  Uint8List proto;
 }
 
 @HostApi(dartHostTestHandler: 'TestHostFitApi')
@@ -35,11 +14,14 @@ abstract class FitApi {
 
   void dispose();
 
-  ListActivityLogsResponse listActivityLogs(ListActivityLogsReuqest request);
+  ProtoWrapper getActivityType(ProtoWrapper request);
+
+  ProtoWrapper listActivityLogs(ProtoWrapper request);
 }
 
 void configurePigeon(PigeonOptions opts) {
-  opts.dartOut = 'lib/messages.dart';
+  opts.dartOut = 'lib/src/messages.dart';
+  opts.dartTestOut = 'lib/src/test.dart';
   opts.objcHeaderOut = 'ios/Classes/messages.h';
   opts.objcSourceOut = 'ios/Classes/messages.m';
   opts.objcOptions.prefix = 'FLT';

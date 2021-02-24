@@ -7,21 +7,17 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-@class FLTListActivityLogsResponse;
-@class FLTListActivityLogsReuqest;
+@class FLTProtoWrapper;
 
-@interface FLTListActivityLogsResponse : NSObject
-@property(nonatomic, strong, nullable) NSArray * activityLogs;
-@end
-
-@interface FLTListActivityLogsReuqest : NSObject
-@property(nonatomic, copy, nullable) NSString * startDate;
+@interface FLTProtoWrapper : NSObject
+@property(nonatomic, strong, nullable) FlutterStandardTypedData * proto;
 @end
 
 @protocol FLTFitApi
 -(void)initialize:(FlutterError *_Nullable *_Nonnull)error;
 -(void)dispose:(FlutterError *_Nullable *_Nonnull)error;
--(nullable FLTListActivityLogsResponse *)listActivityLogs:(FLTListActivityLogsReuqest*)input error:(FlutterError *_Nullable *_Nonnull)error;
+-(nullable FLTProtoWrapper *)getActivityType:(FLTProtoWrapper*)input error:(FlutterError *_Nullable *_Nonnull)error;
+-(nullable FLTProtoWrapper *)listActivityLogs:(FLTProtoWrapper*)input error:(FlutterError *_Nullable *_Nonnull)error;
 @end
 
 extern void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> _Nullable api);
