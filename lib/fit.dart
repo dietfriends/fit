@@ -5,11 +5,11 @@
 
 import 'dart:async';
 
-import 'package:fit/activity_type.dart';
 import 'package:fit/src/generated/messages.pb.dart';
-import 'package:flutter/services.dart';
 
-import 'messages.dart';
+import 'src/messages.dart';
+
+export 'src/messages.dart';
 
 class Fit {
   static FitApi _apiInstance;
@@ -21,6 +21,10 @@ class Fit {
     return _apiInstance;
   }
 
+  static Future<void> init() {
+    return _api.initialize();
+  }
+
   static Future<List<ActivityLog>> listActivityLogs(
       int startTime, int endTime) async {
     final request = ListActivityLogsRequest()
@@ -29,5 +33,9 @@ class Fit {
     final wrapper = await _api
         .listActivityLogs(ProtoWrapper()..proto = request.writeToBuffer());
     return ListActivityLogsResponse.fromBuffer(wrapper.proto).activityLogs;
+  }
+
+  static Future<void> dispose() {
+    return _api.dispose();
   }
 }

@@ -1,4 +1,4 @@
-import 'package:fit/apple_activity_type.dart';
+import 'package:fit/src/apple_activity_type.dart';
 
 /// https://img-developer.samsung.com/onlinedocs/health/android/data/EXERCISE_TYPE.html
 /// https://developer.apple.com/documentation/healthkit/hkworkoutactivitytype

@@ -1,3 +1,5 @@
+// @dart = 2.9
+
 import 'dart:typed_data';
 
 import 'package:pigeon/pigeon_lib.dart';
@@ -18,7 +20,8 @@ abstract class FitApi {
 }
 
 void configurePigeon(PigeonOptions opts) {
-  opts.dartOut = 'lib/messages.dart';
+  opts.dartOut = 'lib/src/messages.dart';
+  opts.dartTestOut = 'lib/src/test.dart';
   opts.objcHeaderOut = 'ios/Classes/messages.h';
   opts.objcSourceOut = 'ios/Classes/messages.m';
   opts.objcOptions.prefix = 'FLT';

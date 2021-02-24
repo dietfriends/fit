@@ -375,6 +375,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.1"
+  remove_from_coverage:
+    dependency: "direct dev"
+    description:
+      name: remove_from_coverage
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.7"
   shelf:
     dependency: transitive
     description:

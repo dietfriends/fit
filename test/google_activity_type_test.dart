@@ -1,5 +1,5 @@
-import 'package:fit/apple_activity_type.dart';
-import 'package:fit/google_activity_type.dart';
+import 'package:fit/src/apple_activity_type.dart';
+import 'package:fit/src/google_activity_type.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
