@@ -8,14 +8,16 @@
 #PROTOC="protoc --dart_out=grpc:lib/src/generated -I$PROTOBUF/src -I$GOOGLEAPIS"
 
 mkdir -p lib/src/generated
-rm -rf lib/src/generated/*
+#rm -f lib/src/generated/*.pb.dart
+#rm -f lib/src/generated/*.pbenum.dart
+#rm -f lib/src/generated/*.pbjson.dart
+
 #SHELL_PATH=`pwd -P`
 export PROTO_DIR=/usr/local/include
 
 #export GOOGLEAPIS=${SHELL_PATH}/api-common-protos/google
 #echo $GOOGLEAPIS
-PROTOC="protoc --dart_out=grpc:lib/src/generated --objc_out=ios/Classes -I$PROTO_DIR"
-PROTOC_KT="protoc --plugin=protoc-gen-grpckt=tool/protoc-gen-grpc-kotlin.sh --grpckt_out=android/src/main/kotlin -I$PROTO_DIR"
+PROTOC="protoc --dart_out=grpc:lib/src/generated --objc_out=ios/Classes --java_out=android/src/main/java -I$PROTO_DIR"
 
 #$PROTOC $PROTO_DIR/google/protobuf/any.proto
 #$PROTOC $PROTO_DIR/google/protobuf/duration.proto
@@ -37,5 +39,4 @@ $PROTOC -Iproto proto/messages.proto --experimental_allow_proto3_optional
 dartfmt -w lib/src/generated
 
 
-$PROTOC_KT -Iproto proto/messages.proto --experimental_allow_proto3_optional
 

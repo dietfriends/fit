@@ -8,14 +8,22 @@ class ProtoWrapper {
   Uint8List proto;
 }
 
+class BoolValue {
+  bool value;
+}
+
 @HostApi(dartHostTestHandler: 'TestHostFitApi')
 abstract class FitApi {
   void initialize();
 
   void dispose();
 
+  @async
+  BoolValue checkPermission();
+
   ProtoWrapper getActivityType(ProtoWrapper request);
 
+  @async
   ProtoWrapper listActivityLogs(ProtoWrapper request);
 }
 

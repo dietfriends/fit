@@ -40,7 +40,7 @@ const ListActivityLogsResponse$json = const {
 const ListActivityLogsRequest$json = const {
   '1': 'ListActivityLogsRequest',
   '2': const [
-    const {'1': 'startTime', '3': 1, '4': 1, '5': 5, '10': 'startTime'},
-    const {'1': 'endTime', '3': 2, '4': 1, '5': 5, '10': 'endTime'},
+    const {'1': 'startTime', '3': 1, '4': 1, '5': 3, '10': 'startTime'},
+    const {'1': 'endTime', '3': 2, '4': 1, '5': 3, '10': 'endTime'},
   ],
 };

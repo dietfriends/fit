@@ -7,6 +7,7 @@
 
 import 'dart:core' as $core;
 
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:protobuf/protobuf.dart' as $pb;
 
 class ActivityLog extends $pb.GeneratedMessage {
@@ -156,8 +157,8 @@ class ListActivityLogsRequest extends $pb.GeneratedMessage {
   static final $pb.BuilderInfo _i = $pb.BuilderInfo('ListActivityLogsRequest',
       package: const $pb.PackageName('dietfriends.fitness'),
       createEmptyInstance: create)
-    ..a<$core.int>(1, 'startTime', $pb.PbFieldType.O3, protoName: 'startTime')
-    ..a<$core.int>(2, 'endTime', $pb.PbFieldType.O3, protoName: 'endTime')
+    ..aInt64(1, 'startTime', protoName: 'startTime')
+    ..aInt64(2, 'endTime', protoName: 'endTime')
     ..hasRequiredFields = false;
 
   ListActivityLogsRequest._() : super();
@@ -185,10 +186,10 @@ class ListActivityLogsRequest extends $pb.GeneratedMessage {
   static ListActivityLogsRequest _defaultInstance;
 
   @$pb.TagNumber(1)
-  $core.int get startTime => $_getIZ(0);
+  $fixnum.Int64 get startTime => $_getI64(0);
   @$pb.TagNumber(1)
-  set startTime($core.int v) {
-    $_setSignedInt32(0, v);
+  set startTime($fixnum.Int64 v) {
+    $_setInt64(0, v);
   }
 
   @$pb.TagNumber(1)
@@ -197,10 +198,10 @@ class ListActivityLogsRequest extends $pb.GeneratedMessage {
   void clearStartTime() => clearField(1);
 
   @$pb.TagNumber(2)
-  $core.int get endTime => $_getIZ(1);
+  $fixnum.Int64 get endTime => $_getI64(1);
   @$pb.TagNumber(2)
-  set endTime($core.int v) {
-    $_setSignedInt32(1, v);
+  set endTime($fixnum.Int64 v) {
+    $_setInt64(1, v);
   }
 
   @$pb.TagNumber(2)

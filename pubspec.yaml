@@ -13,11 +13,13 @@ dependencies:
   protobuf:
   freezed_annotation:
   recase: ^3.0.1
-
+  googleapis: any
+  googleapis_auth: any
+  google_sign_in: ^4.5.9
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  pigeon:
+  pigeon: ^0.1.22
   freezed:
   build_runner:
   remove_from_coverage:

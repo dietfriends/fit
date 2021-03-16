@@ -34,6 +34,16 @@ Step 1: Append the `Info.plist` with the following 2 entries
 Step 2: [Enable "HealthKit" inside the "Capabilities" tab.](https://developer.apple.com/documentation/healthkit/setting_up_healthkit)
 
 
+## Usage
+
+### Check Permission
+
+```dart
+await Fit.checkPermission();
+
+```
+
+
 ## Develop
 
 ### Get dependencies

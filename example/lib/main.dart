@@ -28,9 +28,14 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       //platformVersion = await Fit;
-      await Fit.listActivityLogs(null, null);
-    } on PlatformException {
+      await Fit.checkPermission();
+      await Fit.listActivityLogs(
+          Provider.GOOGLE,
+          DateTime(2021, 2, 1).millisecondsSinceEpoch,
+          DateTime(2021, 2, 15).millisecondsSinceEpoch);
+    } catch (e) {
       platformVersion = 'Failed to get platform version.';
+      print(e);
     }
 
     // If the widget was removed from the tree while the asynchronous platform

@@ -56,7 +56,7 @@ void main() {
     });
 
     test('list activity logs', () async {
-      await Fit.listActivityLogs(1, 2);
+      await Fit.listActivityLogs(Provider.GOOGLE, 1, 2);
       expect(log.log.last, 'listActivityLogs');
       final message = ListActivityLogsRequest.fromBuffer(log.message.proto);
       expect(message.startTime, 1);
