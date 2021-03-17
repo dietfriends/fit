@@ -23,6 +23,7 @@ dev_dependencies:
   freezed:
   build_runner:
   remove_from_coverage:
+  pretty_json:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 

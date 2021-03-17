@@ -7,24 +7,17 @@ import android.util.Log
 import androidx.annotation.NonNull
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
-import com.google.android.gms.common.api.Scope
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.DataType
-import com.google.android.gms.fitness.request.DataReadRequest
 import com.google.android.gms.fitness.request.SessionReadRequest
 import com.google.android.gms.tasks.Tasks
-import dietfriends.fitness.ActivityLog
-import dietfriends.fitness.ListActivityLogsRequest
-import dietfriends.fitness.ListActivityLogsResponse
-
+import dietfriends.fitness.ListSessionsRequest
+import dietfriends.fitness.ListSessionsResponse
+import dietfriends.fitness.Session
 import io.flutter.embedding.engine.plugins.FlutterPlugin
 import io.flutter.embedding.engine.plugins.activity.ActivityAware
 import io.flutter.embedding.engine.plugins.activity.ActivityPluginBinding
-import io.flutter.plugin.common.MethodCall
-import io.flutter.plugin.common.MethodChannel
-import io.flutter.plugin.common.MethodChannel.Result
 import io.flutter.plugin.common.PluginRegistry
 import java.util.concurrent.TimeUnit
 import kotlin.concurrent.thread
@@ -32,7 +25,7 @@ import kotlin.concurrent.thread
 const val GOOGLE_FIT_PERMISSIONS_REQUEST_CODE = 1111
 
 /** FitPlugin */
-class FitPlugin : FlutterPlugin, Messages.FitApi, ActivityAware, PluginRegistry.ActivityResultListener {
+class FitPlugin : FlutterPlugin, Messages.GoogleFitApi, ActivityAware, PluginRegistry.ActivityResultListener {
   companion object {
     val TAG = "FitPlugin"
   }
@@ -44,12 +37,12 @@ class FitPlugin : FlutterPlugin, Messages.FitApi, ActivityAware, PluginRegistry.
   override fun onAttachedToEngine(
       @NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
     applicationContext = flutterPluginBinding.applicationContext
-    Messages.FitApi.setup(flutterPluginBinding.binaryMessenger, this)
+    Messages.GoogleFitApi.setup(flutterPluginBinding.binaryMessenger, this)
   }
 
 
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
-    Messages.FitApi.setup(binding.binaryMessenger, null)
+    Messages.GoogleFitApi.setup(binding.binaryMessenger, null)
     applicationContext = null
   }
 
@@ -63,6 +56,65 @@ class FitPlugin : FlutterPlugin, Messages.FitApi, ActivityAware, PluginRegistry.
 
   override fun getActivityType(arg: Messages.ProtoWrapper?): Messages.ProtoWrapper {
     TODO("Not yet implemented")
+  }
+
+  override fun aggregate(arg: Messages.ProtoWrapper?,
+      result: Messages.Result<Messages.ProtoWrapper>?) {
+    TODO("Not yet implemented")
+  }
+
+  override fun sessionsList(arg: Messages.ProtoWrapper,
+      result: Messages.Result<Messages.ProtoWrapper>) {
+
+
+    val request = ListSessionsRequest.parseFrom(arg.proto)
+
+    val builder = SessionReadRequest.Builder()
+        // The data request can specify multiple data types to return, effectively
+        // combining multiple data queries into one call.
+        // This example demonstrates aggregating only one data type.
+        // .aggregate(DataType.AGGREGATE_ACTIVITY_SUMMARY)
+        // Analogous to a "Group By" in SQL, defines how data should be aggregated.
+        // bucketByTime allows for a time span, whereas bucketBySession would allow
+        // bucketing by "sessions".
+//                .bucketByTime(1, TimeUnit.DAYS)
+        //.setTimeRange(startTime.toLong(), endTime.toLong(), TimeUnit.SECONDS)
+        .read(DataType.TYPE_CALORIES_EXPENDED)
+        .read(DataType.TYPE_STEP_COUNT_DELTA)
+    if (request.startTime > 0 && request.endTime > 0) {
+      builder.setTimeInterval(request.startTime, request.endTime, TimeUnit.MILLISECONDS)
+    }
+    val dataRequest = builder.build()
+
+    //Fitness.getHistoryClient(applicationContext!!, googleSignInAccount).readData(dataRequest)
+    val task = Fitness.getSessionsClient(applicationContext!!, googleSignInAccount()).readSession(
+        dataRequest)
+
+    thread {
+      try {
+        val sessions = Tasks.await(task)
+
+        val mapped = sessions.sessions.map {
+          Session.newBuilder()
+              .setActiveTimeMillis(it.getActiveTime(TimeUnit.MILLISECONDS))
+              .setActivityType(-1)
+              .setId(it.identifier)
+              //.setStartTimeMillis(it.getStartTime(TimeUnit.MILLISECONDS))
+              //.setEndTimeMillis(it.getStartTime(TimeUnit.MILLISECONDS))
+              .setName(it.name)
+              //.setModifiedTimeMillis(it)
+              .setDescription(it.description).build()
+        }
+
+        val response = ListSessionsResponse.newBuilder().addAllSession(mapped).build();
+        activity!!.runOnUiThread {
+          result.success(Messages.ProtoWrapper().apply { proto = response.toByteArray() })
+        }
+      } catch (e: Throwable) {
+        Log.e(TAG, "sessionsList", e)
+      }
+    }
+
   }
 
 
@@ -136,60 +188,8 @@ class FitPlugin : FlutterPlugin, Messages.FitApi, ActivityAware, PluginRegistry.
     }
   }
 
-  override fun listActivityLogs(arg: Messages.ProtoWrapper,
-      result: Messages.Result<Messages.ProtoWrapper>) {
-
-    val request = ListActivityLogsRequest.parseFrom(arg.proto)
-    val endTime = request.endTime
-    val startTime = request.startTime
-    Log.d(TAG, "Range Start: $startTime")
-    Log.d(TAG, "Range End: $endTime")
-
-    thread {
-      try {
-        val fitnessOptions = FitnessOptions.builder().addDataType(
-            DataType.TYPE_CALORIES_EXPENDED).build()
-        val googleSignInAccount = GoogleSignIn.getAccountForExtension(applicationContext!!,
-            fitnessOptions)
-
-        val readRequest =
-            SessionReadRequest.Builder()
-                // The data request can specify multiple data types to return, effectively
-                // combining multiple data queries into one call.
-                // This example demonstrates aggregating only one data type.
-                // .aggregate(DataType.AGGREGATE_ACTIVITY_SUMMARY)
-                // Analogous to a "Group By" in SQL, defines how data should be aggregated.
-                // bucketByTime allows for a time span, whereas bucketBySession would allow
-                // bucketing by "sessions".
-//                .bucketByTime(1, TimeUnit.DAYS)
-                //.setTimeRange(startTime.toLong(), endTime.toLong(), TimeUnit.SECONDS)
-                .read(DataType.TYPE_CALORIES_EXPENDED)
-                .setTimeInterval(startTime, endTime, TimeUnit.MILLISECONDS)
-                .setSessionName("TEST")
-                .build()
-
-        val task = Fitness.getSessionsClient(applicationContext!!, googleSignInAccount).readSession(
-            readRequest)
-
-        val sessions = Tasks.await(task).sessions
-        Log.i(TAG, "sessions : ${sessions.size}")
-        val datas = sessions.map {
-          ActivityLog.newBuilder().setActivityId(it.activity)
-              .setActivityType(it.identifier).build()
-        }
-        val response = ListActivityLogsResponse.newBuilder().addAllActivityLogs(datas).build()
-        activity!!.runOnUiThread {
-          result.success(Messages.ProtoWrapper().apply { proto = response.toByteArray() })
-        }
-      } catch (e: Throwable) {
-        Log.e(TAG, "listActivityLogs error", e)
-        activity!!.runOnUiThread {
-          throw e
-        }
-      }
-
-    }
-
-
+  override fun readDailyTotal(arg: Messages.ProtoWrapper?,
+      result: Messages.Result<Messages.ProtoWrapper>?) {
+    TODO("Not yet implemented")
   }
 }

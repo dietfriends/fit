@@ -59,11 +59,11 @@ static NSDictionary<NSString*, id>* wrapResult(NSDictionary *result, FlutterErro
 }
 @end
 
-void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> api) {
+void FLTGoogleFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTGoogleFitApi> api) {
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.FitApi.initialize"
+        messageChannelWithName:@"dev.flutter.pigeon.GoogleFitApi.initialize"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -79,7 +79,7 @@ void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> ap
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.FitApi.dispose"
+        messageChannelWithName:@"dev.flutter.pigeon.GoogleFitApi.dispose"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -95,7 +95,7 @@ void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> ap
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.FitApi.checkPermission"
+        messageChannelWithName:@"dev.flutter.pigeon.GoogleFitApi.checkPermission"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -111,7 +111,7 @@ void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> ap
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.FitApi.getActivityType"
+        messageChannelWithName:@"dev.flutter.pigeon.GoogleFitApi.getActivityType"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
@@ -128,12 +128,46 @@ void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> ap
   {
     FlutterBasicMessageChannel *channel =
       [FlutterBasicMessageChannel
-        messageChannelWithName:@"dev.flutter.pigeon.FitApi.listActivityLogs"
+        messageChannelWithName:@"dev.flutter.pigeon.GoogleFitApi.aggregate"
         binaryMessenger:binaryMessenger];
     if (api) {
       [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
         FLTProtoWrapper *input = [FLTProtoWrapper fromMap:message];
-        [api listActivityLogs:input completion:^(FLTProtoWrapper *_Nullable output, FlutterError *_Nullable error) {
+        [api aggregate:input completion:^(FLTProtoWrapper *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult([output toMap], error));
+        }];
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.GoogleFitApi.sessionsList"
+        binaryMessenger:binaryMessenger];
+    if (api) {
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FLTProtoWrapper *input = [FLTProtoWrapper fromMap:message];
+        [api sessionsList:input completion:^(FLTProtoWrapper *_Nullable output, FlutterError *_Nullable error) {
+          callback(wrapResult([output toMap], error));
+        }];
+      }];
+    }
+    else {
+      [channel setMessageHandler:nil];
+    }
+  }
+  {
+    FlutterBasicMessageChannel *channel =
+      [FlutterBasicMessageChannel
+        messageChannelWithName:@"dev.flutter.pigeon.GoogleFitApi.readDailyTotal"
+        binaryMessenger:binaryMessenger];
+    if (api) {
+      [channel setMessageHandler:^(id _Nullable message, FlutterReply callback) {
+        FLTProtoWrapper *input = [FLTProtoWrapper fromMap:message];
+        [api readDailyTotal:input completion:^(FLTProtoWrapper *_Nullable output, FlutterError *_Nullable error) {
           callback(wrapResult([output toMap], error));
         }];
       }];

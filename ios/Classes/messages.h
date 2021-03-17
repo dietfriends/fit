@@ -18,14 +18,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) FlutterStandardTypedData * proto;
 @end
 
-@protocol FLTFitApi
+@protocol FLTGoogleFitApi
 -(void)initialize:(FlutterError *_Nullable *_Nonnull)error;
 -(void)dispose:(FlutterError *_Nullable *_Nonnull)error;
 -(void)checkPermission:(void(^)(FLTBoolValue *_Nullable, FlutterError *_Nullable))completion;
 -(nullable FLTProtoWrapper *)getActivityType:(FLTProtoWrapper*)input error:(FlutterError *_Nullable *_Nonnull)error;
--(void)listActivityLogs:(nullable FLTProtoWrapper *)input completion:(void(^)(FLTProtoWrapper *_Nullable, FlutterError *_Nullable))completion;
+-(void)aggregate:(nullable FLTProtoWrapper *)input completion:(void(^)(FLTProtoWrapper *_Nullable, FlutterError *_Nullable))completion;
+-(void)sessionsList:(nullable FLTProtoWrapper *)input completion:(void(^)(FLTProtoWrapper *_Nullable, FlutterError *_Nullable))completion;
+-(void)readDailyTotal:(nullable FLTProtoWrapper *)input completion:(void(^)(FLTProtoWrapper *_Nullable, FlutterError *_Nullable))completion;
 @end
 
-extern void FLTFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTFitApi> _Nullable api);
+extern void FLTGoogleFitApiSetup(id<FlutterBinaryMessenger> binaryMessenger, id<FLTGoogleFitApi> _Nullable api);
 
 NS_ASSUME_NONNULL_END

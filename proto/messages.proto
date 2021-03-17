@@ -4,34 +4,371 @@ package dietfriends.fitness;
 option java_multiple_files = true;
 option java_outer_classname = "FitnessProto";
 option java_package = "dietfriends.fitness";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/struct.proto";
 
-message ActivityLog {
-  // The type of activity performed
-  // 운동 타입
-  string activityType = 1;
-  string activityId = 2;
+/// Sessions contain metadata, such as a user-friendly name and time interval
+/// information.
+message Session {
+  /// Session active time.
+  ///
+  /// While start_time_millis and end_time_millis define the full session time,
+  /// the active time can be shorter and specified by active_time_millis. If the
+  /// inactive time during the session is known, it should also be inserted via
+  /// a com.google.activity.segment data point with a STILL activity value
+  string activeTimeMillis = 1;
 
-  /// 운동 소모 칼로리
-  double totalCaloriesBurned = 3;
+  /// The type of activity this session represents.
+  int32 activityType = 2;
 
-  /// 운동 시간
-  string duration = 4;
+  /// The application that created the session.
+  //Application application =3 ;
 
-  // The total distance traveled
-  /// 이동 거리
-  string totalDistance = 5;
+  /// A description for this session.
+  string description = 4;
 
-  // String totalClimed;
+  /// An end time, in milliseconds since epoch, inclusive.
+  string endTimeMillis = 5 ;
 
-  /// Google, Apple, Samsung
-  string source = 6;
+  /// A client-generated identifier that is unique across all sessions owned by
+  /// this particular user.
+  string id = 6;
+
+  /// A timestamp that indicates when the session was last modified.
+  string modifiedTimeMillis = 7;
+
+  /// A human readable name of the session.
+  string name = 8;
+
+  /// A start time, in milliseconds since epoch, inclusive.
+  string startTimeMillis = 9;
 }
 
-message ListActivityLogsResponse {
-  repeated ActivityLog activityLogs = 1;
+message ListSessionsResponse {
+  /// If includeDeleted is set to true in the request, and startTime and endTime
+  /// are omitted, this will include sessions which were deleted since the last
+  /// sync.
+  repeated  Session deletedSession = 1;
+
+  /// Flag to indicate server has more data to transfer.
+  ///
+  /// DO NOT USE THIS FIELD. It is never populated in responses from the server.
+  bool hasMoreData = 2;
+
+  /// The sync token which is used to sync further changes.
+  ///
+  /// This will only be provided if both startTime and endTime are omitted from
+  /// the request.
+  string nextPageToken = 3;
+
+  /// Sessions with an end time that is between startTime and endTime of the
+  /// request.
+  repeated  Session session = 4;
 }
 
-message ListActivityLogsRequest {
-  int64 startTime = 1;
+message ListSessionsRequest {
+  repeated int32 activityType = 1;
   int64 endTime = 2;
+  bool includeDeleted = 3;
+  string pageToken = 4;
+  int64 startTime = 5;
+  string fields = 6;
+}
+
+message AggregateResponse {
+  /// A list of buckets containing the aggregated data.
+  repeated AggregateBucket bucket = 1;
+}
+
+
+message AggregateBucket {
+  /// Available for Bucket.Type.ACTIVITY_TYPE, Bucket.Type.ACTIVITY_SEGMENT
+  int32 activity = 1;
+
+  /// There will be one dataset per AggregateBy in the request.
+  repeated  Dataset dataset = 2;
+
+  /// The end time for the aggregated data, in milliseconds since epoch,
+  /// inclusive.
+  int64 endTimeMillis = 3;
+
+  /// Available for Bucket.Type.SESSION
+  Session session = 4;
+
+  /// The start time for the aggregated data, in milliseconds since epoch,
+  /// inclusive.
+  int64 startTimeMillis = 5;
+
+  /// The type of a bucket signifies how the data aggregation is performed in
+  /// the bucket.
+  /// Possible string values are:
+  /// - "unknown"
+  /// - "time" : Denotes that bucketing by time is requested. When this is
+  /// specified, the timeBucketDurationMillis field is used to determine how
+  /// many buckets will be returned.
+  /// - "session" : Denotes that bucketing by session is requested. When this is
+  /// specified, only data that occurs within sessions that begin and end within
+  /// the dataset time frame, is included in the results.
+  /// - "activityType" : Denotes that bucketing by activity type is requested.
+  /// When this is specified, there will be one bucket for each unique activity
+  /// type that a user participated in, during the dataset time frame of
+  /// interest.
+  /// - "activitySegment" : Denotes that bucketing by individual activity
+  /// segment is requested. This will aggregate data by the time boundaries
+  /// specified by each activity segment occurring within the dataset time frame
+  /// of interest.
+  string type = 6;
+}
+
+
+/// A dataset represents a projection container for data points.
+///
+/// They do not carry any info of their own. Datasets represent a set of data
+/// points from a particular data source. A data point can be found in more than
+/// one dataset.
+message Dataset {
+  /// The data stream ID of the data source that created the points in this
+  /// dataset.
+  string dataSourceId = 1;
+
+  /// The largest end time of all data points in this possibly partial
+  /// representation of the dataset.
+  ///
+  /// Time is in nanoseconds from epoch. This should also match the second part
+  /// of the dataset identifier.
+  string maxEndTimeNs = 2;
+
+  /// The smallest start time of all data points in this possibly partial
+  /// representation of the dataset.
+  ///
+  /// Time is in nanoseconds from epoch. This should also match the first part
+  /// of the dataset identifier.
+  string minStartTimeNs = 3;
+
+  /// This token will be set when a dataset is received in response to a GET
+  /// request and the dataset is too large to be included in a single response.
+  ///
+  /// Provide this value in a subsequent GET request to return the next page of
+  /// data points within this dataset.
+  string nextPageToken = 4;
+
+  /// A partial list of data points contained in the dataset, ordered by
+  /// endTimeNanos.
+  ///
+  /// This list is considered complete when retrieving a small dataset and
+  /// partial when patching a dataset or retrieving a dataset that is too large
+  /// to include in a single response.
+  repeated  DataPoint point = 5;
+}
+
+/// Represents a single data point, generated by a particular data source.
+///
+/// A data point holds a value for each field, an end timestamp and an optional
+/// start time. The exact semantics of each of these attributes are specified in
+/// the documentation for the particular data type. A data point can represent
+/// an instantaneous measurement, reading or input observation, as well as
+/// averages or aggregates over a time interval. Check the data type
+/// documentation to determine which is the case for a particular data type.
+/// Data points always contain one value for each field of the data type.
+message DataPoint {
+  /// DO NOT USE THIS FIELD.
+  ///
+  /// It is ignored, and not stored.
+  string computationTimeMillis = 1;
+
+  /// The data type defining the format of the values in this data point.
+  string dataTypeName = 2;
+
+  /// The end time of the interval represented by this data point, in
+  /// nanoseconds since epoch.
+  string endTimeNanos = 3;
+
+  /// Indicates the last time this data point was modified.
+  ///
+  /// Useful only in contexts where we are listing the data changes, rather than
+  /// representing the current state of the data.
+  string modifiedTimeMillis = 4;
+
+  /// If the data point is contained in a dataset for a derived data source,
+  /// this field will be populated with the data source stream ID that created
+  /// the data point originally.
+  ///
+  /// WARNING: do not rely on this field for anything other than debugging. The
+  /// value of this field, if it is set at all, is an implementation detail and
+  /// is not guaranteed to remain consistent.
+  string originDataSourceId = 5 ;
+
+  /// The raw timestamp from the original SensorEvent.
+  string rawTimestampNanos = 6;
+
+  /// The start time of the interval represented by this data point, in
+  /// nanoseconds since epoch.
+  string startTimeNanos = 7;
+
+  /// Values of each data type field for the data point.
+  ///
+  /// It is expected that each value corresponding to a data type field will
+  /// occur in the same order that the field is listed with in the data type
+  /// specified in a data source. Only one of integer and floating point fields
+  /// will be populated, depending on the format enum value within data source's
+  /// type field.
+  repeated DataPoint value = 8;
+}
+
+
+/// Holder object for the value of a single field in a data point.
+///
+/// A field value has a particular format and is only ever set to one of an
+/// integer or a floating point value.
+message DataPointValue {
+  oneof kind {
+    /// Floating point value.
+    ///
+    /// When this is set, other values must not be set.
+    double fpVal = 1;
+
+    /// Integer value.
+    ///
+    /// When this is set, other values must not be set.
+    int64 intVal = 2;
+
+    /// Map value.
+    ///
+    /// The valid key space and units for the corresponding value of each entry
+    /// should be documented as part of the data type definition. Keys should be
+    /// kept small whenever possible. Data streams with large keys and high data
+    /// frequency may be down sampled.
+    google.protobuf.Struct mapVal = 3;
+
+    /// String value.
+    ///
+    /// When this is set, other values must not be set. Strings should be kept
+    /// small whenever possible. Data streams with large string values and high
+    /// data frequency may be down sampled.
+    string stringVal = 4;
+  }
+}
+
+
+/// Next id: 10
+message AggregateRequest {
+  /// The specification of data to be aggregated.
+  ///
+  /// At least one aggregateBy spec must be provided. All data that is specified
+  /// will be aggregated using the same bucketing criteria. There will be one
+  /// dataset in the response for every aggregateBy spec.
+  repeated AggregateBy aggregateBy = 1;
+
+  /// Specifies that data be aggregated each activity segment recorded for a
+  /// user.
+  ///
+  /// Similar to bucketByActivitySegment, but bucketing is done for each
+  /// activity segment rather than all segments of the same type. Mutually
+  /// exclusive of other bucketing specifications.
+  BucketByActivity bucketByActivitySegment = 2;
+
+  /// Specifies that data be aggregated by the type of activity being performed
+  /// when the data was recorded.
+  ///
+  /// All data that was recorded during a certain activity type (.for the given
+  /// time range) will be aggregated into the same bucket. Data that was
+  /// recorded while the user was not active will not be included in the
+  /// response. Mutually exclusive of other bucketing specifications.
+  BucketByActivity bucketByActivityType = 3;
+
+  /// Specifies that data be aggregated by user sessions.
+  ///
+  /// Data that does not fall within the time range of a session will not be
+  /// included in the response. Mutually exclusive of other bucketing
+  /// specifications.
+  BucketBySession bucketBySession = 4;
+
+  /// Specifies that data be aggregated by a single time interval.
+  ///
+  /// Mutually exclusive of other bucketing specifications.
+  BucketByTime bucketByTime = 5;
+
+  /// The end of a window of time.
+  ///
+  /// Data that intersects with this time window will be aggregated. The time is
+  /// in milliseconds since epoch, inclusive.
+  int64 endTimeMillis = 6;
+
+  /// DO NOT POPULATE THIS FIELD.
+  ///
+  /// It is ignored.
+  repeated string filteredDataQualityStandard = 7;
+
+  /// The start of a window of time.
+  ///
+  /// Data that intersects with this time window will be aggregated. The time is
+  /// in milliseconds since epoch, inclusive.
+  int64 startTimeMillis = 8;
+}
+
+
+/// The specification of which data to aggregate.
+message AggregateBy {
+  /// A data source ID to aggregate.
+  ///
+  /// Only data from the specified data source ID will be included in the
+  /// aggregation. If specified, this data source must exist; the OAuth scopes
+  /// in the supplied credentials must grant read access to this data type. The
+  /// dataset in the response will have the same data source ID. Note: Data can
+  /// be aggregated by either the dataTypeName or the dataSourceId, not both.
+  string dataSourceId = 1;
+
+  /// The data type to aggregate.
+  ///
+  /// All data sources providing this data type will contribute data to the
+  /// aggregation. The response will contain a single dataset for this data type
+  /// name. The dataset will have a data source ID of
+  /// derived::com.google.android.gms:aggregated. If the user has no data for
+  /// this data type, an empty data set will be returned. Note: Data can be
+  /// aggregated by either the dataTypeName or the dataSourceId, not both.
+  string dataTypeName = 2;
+}
+
+
+
+message  BucketByActivity {
+  /// The default activity stream will be used if a specific
+  /// activityDataSourceId is not specified.
+  string activityDataSourceId = 1;
+
+  /// Specifies that only activity segments of duration longer than
+  /// minDurationMillis are considered and used as a container for aggregated
+  /// data.
+  int64 minDurationMillis = 2;
+}
+
+message BucketBySession{
+  /// Specifies that only sessions of duration longer than minDurationMillis are
+  /// considered and used as a container for aggregated data.
+  int64 minDurationMillis = 1;
+}
+
+
+
+message BucketByTime {
+  /// Specifies that result buckets aggregate data by exactly durationMillis
+  /// time frames.
+  ///
+  /// Time frames that contain no data will be included in the response with an
+  /// empty dataset.
+  int64 durationMillis = 1;
+  BucketByTimePeriod period = 2;
+}
+
+message  BucketByTimePeriod {
+  /// org.joda.timezone.DateTimeZone
+  string timeZoneId = 1;
+
+  ///
+  /// Possible string values are:
+  /// - "day"
+  /// - "week"
+  /// - "month"
+  string type = 2;
+  int32 value = 3;
 }

@@ -57,18 +57,20 @@ public class Messages {
   }
 
   /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
-  public interface FitApi {
+  public interface GoogleFitApi {
     void initialize();
     void dispose();
     void checkPermission(Result<BoolValue> result);
     ProtoWrapper getActivityType(ProtoWrapper arg);
-    void listActivityLogs(ProtoWrapper arg, Result<ProtoWrapper> result);
+    void aggregate(ProtoWrapper arg, Result<ProtoWrapper> result);
+    void sessionsList(ProtoWrapper arg, Result<ProtoWrapper> result);
+    void readDailyTotal(ProtoWrapper arg, Result<ProtoWrapper> result);
 
-    /** Sets up an instance of `FitApi` to handle messages through the `binaryMessenger` */
-    static void setup(BinaryMessenger binaryMessenger, FitApi api) {
+    /** Sets up an instance of `GoogleFitApi` to handle messages through the `binaryMessenger` */
+    static void setup(BinaryMessenger binaryMessenger, GoogleFitApi api) {
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FitApi.initialize", new StandardMessageCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitApi.initialize", new StandardMessageCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
@@ -87,7 +89,7 @@ public class Messages {
       }
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FitApi.dispose", new StandardMessageCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitApi.dispose", new StandardMessageCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
@@ -106,7 +108,7 @@ public class Messages {
       }
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FitApi.checkPermission", new StandardMessageCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitApi.checkPermission", new StandardMessageCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
@@ -124,7 +126,7 @@ public class Messages {
       }
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FitApi.getActivityType", new StandardMessageCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitApi.getActivityType", new StandardMessageCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
@@ -145,14 +147,54 @@ public class Messages {
       }
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.FitApi.listActivityLogs", new StandardMessageCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitApi.aggregate", new StandardMessageCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
             try {
               @SuppressWarnings("ConstantConditions")
               ProtoWrapper input = ProtoWrapper.fromMap((Map<String, Object>)message);
-              api.listActivityLogs(input, result -> { wrapped.put("result", result.toMap()); reply.reply(wrapped); });
+              api.aggregate(input, result -> { wrapped.put("result", result.toMap()); reply.reply(wrapped); });
+            }
+            catch (Exception exception) {
+              wrapped.put("error", wrapError(exception));
+              reply.reply(wrapped);
+            }
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitApi.sessionsList", new StandardMessageCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              @SuppressWarnings("ConstantConditions")
+              ProtoWrapper input = ProtoWrapper.fromMap((Map<String, Object>)message);
+              api.sessionsList(input, result -> { wrapped.put("result", result.toMap()); reply.reply(wrapped); });
+            }
+            catch (Exception exception) {
+              wrapped.put("error", wrapError(exception));
+              reply.reply(wrapped);
+            }
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitApi.readDailyTotal", new StandardMessageCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              @SuppressWarnings("ConstantConditions")
+              ProtoWrapper input = ProtoWrapper.fromMap((Map<String, Object>)message);
+              api.readDailyTotal(input, result -> { wrapped.put("result", result.toMap()); reply.reply(wrapped); });
             }
             catch (Exception exception) {
               wrapped.put("error", wrapError(exception));

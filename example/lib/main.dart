@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+import 'dart:convert';
 
-import 'package:flutter/services.dart';
 import 'package:fit/fit.dart';
+import 'package:flutter/material.dart';
 
 void main() {
   runApp(MyApp());
@@ -28,11 +28,10 @@ class _MyAppState extends State<MyApp> {
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       //platformVersion = await Fit;
-      await Fit.checkPermission();
-      await Fit.listActivityLogs(
-          Provider.GOOGLE,
-          DateTime(2021, 2, 1).millisecondsSinceEpoch,
-          DateTime(2021, 2, 15).millisecondsSinceEpoch);
+      await GoogleFitness.checkPermission();
+      platformVersion = jsonEncode((await GoogleFitness.sessions.list(
+              startTime: DateTime(2021, 2, 1), endTime: DateTime(2021, 3, 15)))
+          .toProto3Json());
     } catch (e) {
       platformVersion = 'Failed to get platform version.';
       print(e);

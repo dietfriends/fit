@@ -17,12 +17,13 @@ export PROTO_DIR=/usr/local/include
 
 #export GOOGLEAPIS=${SHELL_PATH}/api-common-protos/google
 #echo $GOOGLEAPIS
-PROTOC="protoc --dart_out=grpc:lib/src/generated --objc_out=ios/Classes --java_out=android/src/main/java -I$PROTO_DIR"
+PROTOC="protoc --dart_out=grpc:lib/src/generated --objc_out=ios/Classes -I$PROTO_DIR"
+PROTOC_JAVA="protoc --java_out=android/src/main/java -I$PROTO_DIR"
 
 #$PROTOC $PROTO_DIR/google/protobuf/any.proto
 #$PROTOC $PROTO_DIR/google/protobuf/duration.proto
 #$PROTOC $PROTO_DIR/google/protobuf/empty.proto
-#$PROTOC $PROTO_DIR/google/protobuf/struct.proto
+$PROTOC $PROTO_DIR/google/protobuf/struct.proto
 #$PROTOC $PROTO_DIR/google/protobuf/timestamp.proto
 #$PROTOC $PROTO_DIR/google/protobuf/wrappers.proto
 

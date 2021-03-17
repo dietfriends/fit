@@ -9,16 +9,18 @@ import 'package:flutter_test/flutter_test.dart';
 
 import 'messages.dart';
 
-abstract class TestHostFitApi {
+abstract class TestHostGoogleFitApi {
   void initialize();
   void dispose();
   Future<BoolValue> checkPermission();
   ProtoWrapper getActivityType(ProtoWrapper arg);
-  Future<ProtoWrapper> listActivityLogs(ProtoWrapper arg);
-  static void setup(TestHostFitApi api) {
+  Future<ProtoWrapper> aggregate(ProtoWrapper arg);
+  Future<ProtoWrapper> sessionsList(ProtoWrapper arg);
+  Future<ProtoWrapper> readDailyTotal(ProtoWrapper arg);
+  static void setup(TestHostGoogleFitApi api) {
     {
-      const BasicMessageChannel<Object> channel =
-          BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.initialize', StandardMessageCodec());
+      const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+          'dev.flutter.pigeon.GoogleFitApi.initialize', StandardMessageCodec());
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
@@ -30,8 +32,8 @@ abstract class TestHostFitApi {
       }
     }
     {
-      const BasicMessageChannel<Object> channel =
-          BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.dispose', StandardMessageCodec());
+      const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+          'dev.flutter.pigeon.GoogleFitApi.dispose', StandardMessageCodec());
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
@@ -43,8 +45,9 @@ abstract class TestHostFitApi {
       }
     }
     {
-      const BasicMessageChannel<Object> channel =
-          BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.checkPermission', StandardMessageCodec());
+      const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+          'dev.flutter.pigeon.GoogleFitApi.checkPermission',
+          StandardMessageCodec());
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
@@ -56,13 +59,15 @@ abstract class TestHostFitApi {
       }
     }
     {
-      const BasicMessageChannel<Object> channel =
-          BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.getActivityType', StandardMessageCodec());
+      const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+          'dev.flutter.pigeon.GoogleFitApi.getActivityType',
+          StandardMessageCodec());
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object message) async {
-          assert(message != null, 'Argument for dev.flutter.pigeon.FitApi.getActivityType was null. Expected ProtoWrapper.');
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.GoogleFitApi.getActivityType was null. Expected ProtoWrapper.');
           final ProtoWrapper input = ProtoWrapper.decode(message);
           final ProtoWrapper output = api.getActivityType(input);
           return <Object, Object>{'result': output.encode()};
@@ -70,15 +75,48 @@ abstract class TestHostFitApi {
       }
     }
     {
-      const BasicMessageChannel<Object> channel =
-          BasicMessageChannel<Object>('dev.flutter.pigeon.FitApi.listActivityLogs', StandardMessageCodec());
+      const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+          'dev.flutter.pigeon.GoogleFitApi.aggregate', StandardMessageCodec());
       if (api == null) {
         channel.setMockMessageHandler(null);
       } else {
         channel.setMockMessageHandler((Object message) async {
-          assert(message != null, 'Argument for dev.flutter.pigeon.FitApi.listActivityLogs was null. Expected ProtoWrapper.');
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.GoogleFitApi.aggregate was null. Expected ProtoWrapper.');
           final ProtoWrapper input = ProtoWrapper.decode(message);
-          final ProtoWrapper output = await api.listActivityLogs(input);
+          final ProtoWrapper output = await api.aggregate(input);
+          return <Object, Object>{'result': output.encode()};
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+          'dev.flutter.pigeon.GoogleFitApi.sessionsList',
+          StandardMessageCodec());
+      if (api == null) {
+        channel.setMockMessageHandler(null);
+      } else {
+        channel.setMockMessageHandler((Object message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.GoogleFitApi.sessionsList was null. Expected ProtoWrapper.');
+          final ProtoWrapper input = ProtoWrapper.decode(message);
+          final ProtoWrapper output = await api.sessionsList(input);
+          return <Object, Object>{'result': output.encode()};
+        });
+      }
+    }
+    {
+      const BasicMessageChannel<Object> channel = BasicMessageChannel<Object>(
+          'dev.flutter.pigeon.GoogleFitApi.readDailyTotal',
+          StandardMessageCodec());
+      if (api == null) {
+        channel.setMockMessageHandler(null);
+      } else {
+        channel.setMockMessageHandler((Object message) async {
+          assert(message != null,
+              'Argument for dev.flutter.pigeon.GoogleFitApi.readDailyTotal was null. Expected ProtoWrapper.');
+          final ProtoWrapper input = ProtoWrapper.decode(message);
+          final ProtoWrapper output = await api.readDailyTotal(input);
           return <Object, Object>{'result': output.encode()};
         });
       }

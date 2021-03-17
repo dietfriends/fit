@@ -2,6 +2,7 @@
 
 import 'dart:typed_data';
 
+import 'package:googleapis/fitness/v1.dart';
 import 'package:pigeon/pigeon_lib.dart';
 
 class ProtoWrapper {
@@ -12,8 +13,8 @@ class BoolValue {
   bool value;
 }
 
-@HostApi(dartHostTestHandler: 'TestHostFitApi')
-abstract class FitApi {
+@HostApi(dartHostTestHandler: 'TestHostGoogleFitApi')
+abstract class GoogleFitApi {
   void initialize();
 
   void dispose();
@@ -24,7 +25,13 @@ abstract class FitApi {
   ProtoWrapper getActivityType(ProtoWrapper request);
 
   @async
-  ProtoWrapper listActivityLogs(ProtoWrapper request);
+  ProtoWrapper aggregate(ProtoWrapper request);
+
+  @async
+  ProtoWrapper sessionsList(ProtoWrapper request);
+
+  @async
+  ProtoWrapper readDailyTotal(ProtoWrapper request);
 }
 
 void configurePigeon(PigeonOptions opts) {
