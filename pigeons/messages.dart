@@ -1,16 +1,11 @@
-// @dart = 2.9
-
-import 'dart:typed_data';
-
-import 'package:googleapis/fitness/v1.dart';
-import 'package:pigeon/pigeon_lib.dart';
+import 'package:pigeon/pigeon.dart';
 
 class ProtoWrapper {
-  Uint8List proto;
+  int? proto;
 }
 
 class BoolValue {
-  bool value;
+  bool? value;
 }
 
 @HostApi(dartHostTestHandler: 'TestHostGoogleFitApi')
@@ -20,27 +15,42 @@ abstract class GoogleFitApi {
   void dispose();
 
   @async
-  BoolValue checkPermission();
+  bool checkPermission();
 
-  ProtoWrapper getActivityType(ProtoWrapper request);
+//ProtoWrapper getActivityType(ProtoWrapper request);
 
-  @async
-  ProtoWrapper aggregate(ProtoWrapper request);
+//@async
+//ProtoWrapper aggregate(ProtoWrapper request);
 
-  @async
-  ProtoWrapper sessionsList(ProtoWrapper request);
+//@async
+//ProtoWrapper sessionsList(ProtoWrapper request);
 
-  @async
-  ProtoWrapper readDailyTotal(ProtoWrapper request);
+//@async
+//ProtoWrapper readDailyTotal(ProtoWrapper request);
 }
 
-void configurePigeon(PigeonOptions opts) {
-  opts.dartOut = 'lib/src/generated/messages.dart';
-  opts.dartTestOut = 'lib/src/generated/test.dart';
-  opts.objcHeaderOut = 'ios/Classes/messages.h';
-  opts.objcSourceOut = 'ios/Classes/messages.m';
-  opts.objcOptions.prefix = 'FLT';
-  opts.javaOut =
-      'android/src/main/java/kr/dietfriends/plugins/fit/Messages.java';
-  opts.javaOptions.package = 'kr.dietfriends.plugins.fit';
+class HKQuantity {
+  String? unit;
+  int? amount;
+}
+
+/// The HKWorkout class is a concrete subclass of the HKSample class;
+/// however, they behave somewhat differently than other sample types.
+class HKWorkout {
+  /// The workout’s duration.
+  int? duration;
+
+  /// The total distance traveled during the workout.
+  ///HKQuantity totalDistance;
+  /// The total distance traveled during the workout.
+  int? totalDistance;
+
+  ///HKQuantity totalEnergyBurned;
+  int? totalEnergyBurned;
+}
+
+@HostApi(dartHostTestHandler: 'TestHostHealthKitApi')
+abstract class HealthKitApi {
+  @async
+  void requestAuthorization();
 }

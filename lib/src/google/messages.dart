@@ -2,11 +2,11 @@ import 'package:fit/src/generated/messages.pb.dart';
 import 'package:googleapis/fitness/v1.dart' as $fitness;
 
 extension ListSessionsResponseX on ListSessionsResponse {
-  static ListSessionsResponse fromFitness(
-      $fitness.ListSessionsResponse response) {
-    return ListSessionsResponse()
-      ..session.addAll(response.session.map((e) => SessionX.fromFitness(e)));
-  }
+  //static ListSessionsResponse fromFitness(
+    //  $fitness.ListSessionsResponse response) {
+    //return ListSessionsResponse()
+    //  ..session.addAll(response.session.map((e) => SessionX.fromFitness(e)));
+  //}
 }
 
 extension SessionX on Session {

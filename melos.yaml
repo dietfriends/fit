@@ -1,0 +1,7 @@
+name: fit
+
+packages:
+  - packages/**
+
+ignore: 
+ - packages/**/example

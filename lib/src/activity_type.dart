@@ -19,14 +19,14 @@ class ActivityType {
 
   const ActivityType.apple(this.name, this.id) : source = 'apple';
 
-  static ActivityType fromGoogle(int activityId) {
+  static ActivityType? fromGoogle(int activityId) {
     switch (activityId) {
       case 0:
         return ActivityType.google('In vehicle', 0);
     }
   }
 
-  static ActivityType fromApple(int activityId) {
+  static ActivityType? fromApple(int activityId) {
     switch (activityId) {
       case 0:
         return ActivityType.google('In vehicle', 0);
