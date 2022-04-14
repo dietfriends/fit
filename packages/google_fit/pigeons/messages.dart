@@ -1,73 +1,87 @@
 import 'package:pigeon/pigeon.dart';
 
-class DataType {
-  String name;
+class AggregateResponse {
+  final List<Bucket?> buckets;
 
-  // Fields
-  String readScope;
-  String writeScope;
-  DataType? aggregateType;
-
-  DataType(this.name,
-      this.readScope,
-      this.writeScope, this.aggregateType,);
+  AggregateResponse(this.buckets);
 }
 
+class Bucket {
+  final int startTime;
+  final int endTime;
+  final Session? session;
+  final List<DataSet?> dataSets;
+
+  Bucket(this.startTime, this.endTime, this.session, this.dataSets);
+}
+
+class Session {
+  final String activity;
+  final String indentifier;
+  final String description;
+  final String? name;
+
+  Session(this.activity, this.indentifier, this.description, this.name);
+}
+
+enum DataType { duration, calorie, speed, distance, step, unknwon }
+
 enum DataSourceType {
-  TYPE_DERIVED,
-  TYPE_RAW,
+  typeDerieved,
+  typeRaw,
 }
 
 class DataSource {
   String? appPackageName;
-  DataType? dateType;
 
   // Device device;
-  String? streamIdentifier;
-  String? streamName;
-  DataSourceType? type;
+  String streamIdentifier;
+  String streamName;
 
-  DataSource(this.appPackageName,
-      this.dateType,
-      // this.device,
-      this.streamIdentifier,
-      this.streamName,
-      this.type,);
-}
-
-class DataPoint {
-  DataSource? dataSource;
-
-  DataPoint(this.dataSource,);
+  DataSource(
+    this.appPackageName,
+    this.streamIdentifier,
+    this.streamName,
+  );
 }
 
 class DataSet {
-  DataType? dataType;
-  List<DataPoint?> dataPoints;
+  final DataType? dataType;
+  final bool isEmpty;
+  final List<DataPoint?> dataPoints;
+  final DataSource? dataSource;
 
-  DataSet({required this.dataType, this.dataPoints = const []});
+  DataSet(this.dataType, this.isEmpty, this.dataPoints, this.dataSource);
+}
+
+class DataPoint {
+  final List<DataPointValue?> values;
+
+  DataPoint(this.values);
+}
+
+class DataPointValue {
+  final String valueType;
+  final String value;
+
+  DataPointValue(this.valueType, this.value);
 }
 
 @ConfigurePigeon(PigeonOptions(
     dartOut: 'lib/src/generated/messages.dart',
     javaOut:
-    'android/src/main/java/com/balancefroends/plugins/google/fit/Messages.java',
+        'android/src/main/java/com/balancefroends/plugins/google/fit/Messages.java',
     javaOptions: JavaOptions(
       package: 'com.balancefroends.plugins.google.fit',
     )))
 @HostApi()
-abstract class HistoryClient {
-  /// Reads the current daily total for the given dataType. The daily total will
-  /// be computed from midnight of the current day on the device's current
-  /// timezone. The method can be used as follows:
-  /// https://developers.google.com/android/reference/com/google/android/gms/fitness/HistoryClient#public-taskdataset-readdailytotal-datatype-datatype
+abstract class GoogleFitClient {
   @async
-  DataSet readDailyTotal(DataType dataType);
+  bool hasPermissions();
 
-  /// Reads the current daily total for the given dataType from the local device
-  /// only. The daily total will be computed from midnight of the current day on
-  /// the device's current timezone.
-  /// https://developers.google.com/android/reference/com/google/android/gms/fitness/HistoryClient#public-taskdataset-readdailytotalfromlocaldevice-datatype-datatype
   @async
-  DataSet readDailyTotalFromLocalDevice(DataType dataType);
+  bool requestAuthorization();
+
+  @async
+  AggregateResponse aggregate(int startTimeMillis, int endTimeMillis);
 }

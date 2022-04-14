@@ -22,9 +22,23 @@ import java.util.HashMap;
 @SuppressWarnings({"unused", "unchecked", "CodeBlock2Expr", "RedundantSuppression"})
 public class Messages {
 
+  public enum DataType {
+    duration(0),
+    calorie(1),
+    speed(2),
+    distance(3),
+    step(4),
+    unknwon(5);
+
+    private int index;
+    private DataType(final int index) {
+      this.index = index;
+    }
+  }
+
   public enum DataSourceType {
-    TYPE_DERIVED(0),
-    TYPE_RAW(1);
+    typeDerieved(0),
+    typeRaw(1);
 
     private int index;
     private DataSourceType(final int index) {
@@ -33,90 +47,217 @@ public class Messages {
   }
 
   /** Generated class from Pigeon that represents data sent in messages. */
-  public static class DataType {
-    private @NonNull String name;
-    public @NonNull String getName() { return name; }
-    public void setName(@NonNull String setterArg) {
+  public static class AggregateResponse {
+    private @NonNull List<Bucket> buckets;
+    public @NonNull List<Bucket> getBuckets() { return buckets; }
+    public void setBuckets(@NonNull List<Bucket> setterArg) {
       if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"name\" is null.");
+        throw new IllegalStateException("Nonnull field \"buckets\" is null.");
       }
-      this.name = setterArg;
-    }
-
-    private @NonNull String readScope;
-    public @NonNull String getReadScope() { return readScope; }
-    public void setReadScope(@NonNull String setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"readScope\" is null.");
-      }
-      this.readScope = setterArg;
-    }
-
-    private @NonNull String writeScope;
-    public @NonNull String getWriteScope() { return writeScope; }
-    public void setWriteScope(@NonNull String setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"writeScope\" is null.");
-      }
-      this.writeScope = setterArg;
-    }
-
-    private @Nullable DataType aggregateType;
-    public @Nullable DataType getAggregateType() { return aggregateType; }
-    public void setAggregateType(@Nullable DataType setterArg) {
-      this.aggregateType = setterArg;
+      this.buckets = setterArg;
     }
 
     /** Constructor is private to enforce null safety; use Builder. */
-    private DataType() {}
+    private AggregateResponse() {}
     public static final class Builder {
-      private @Nullable String name;
-      public @NonNull Builder setName(@NonNull String setterArg) {
-        this.name = setterArg;
+      private @Nullable List<Bucket> buckets;
+      public @NonNull Builder setBuckets(@NonNull List<Bucket> setterArg) {
+        this.buckets = setterArg;
         return this;
       }
-      private @Nullable String readScope;
-      public @NonNull Builder setReadScope(@NonNull String setterArg) {
-        this.readScope = setterArg;
-        return this;
-      }
-      private @Nullable String writeScope;
-      public @NonNull Builder setWriteScope(@NonNull String setterArg) {
-        this.writeScope = setterArg;
-        return this;
-      }
-      private @Nullable DataType aggregateType;
-      public @NonNull Builder setAggregateType(@Nullable DataType setterArg) {
-        this.aggregateType = setterArg;
-        return this;
-      }
-      public @NonNull DataType build() {
-        DataType pigeonReturn = new DataType();
-        pigeonReturn.setName(name);
-        pigeonReturn.setReadScope(readScope);
-        pigeonReturn.setWriteScope(writeScope);
-        pigeonReturn.setAggregateType(aggregateType);
+      public @NonNull AggregateResponse build() {
+        AggregateResponse pigeonReturn = new AggregateResponse();
+        pigeonReturn.setBuckets(buckets);
         return pigeonReturn;
       }
     }
     @NonNull Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("name", name);
-      toMapResult.put("readScope", readScope);
-      toMapResult.put("writeScope", writeScope);
-      toMapResult.put("aggregateType", (aggregateType == null) ? null : aggregateType.toMap());
+      toMapResult.put("buckets", buckets);
       return toMapResult;
     }
-    static @NonNull DataType fromMap(@NonNull Map<String, Object> map) {
-      DataType pigeonResult = new DataType();
+    static @NonNull AggregateResponse fromMap(@NonNull Map<String, Object> map) {
+      AggregateResponse pigeonResult = new AggregateResponse();
+      Object buckets = map.get("buckets");
+      pigeonResult.setBuckets((List<Bucket>)buckets);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class Bucket {
+    private @NonNull Long startTime;
+    public @NonNull Long getStartTime() { return startTime; }
+    public void setStartTime(@NonNull Long setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"startTime\" is null.");
+      }
+      this.startTime = setterArg;
+    }
+
+    private @NonNull Long endTime;
+    public @NonNull Long getEndTime() { return endTime; }
+    public void setEndTime(@NonNull Long setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"endTime\" is null.");
+      }
+      this.endTime = setterArg;
+    }
+
+    private @Nullable Session session;
+    public @Nullable Session getSession() { return session; }
+    public void setSession(@Nullable Session setterArg) {
+      this.session = setterArg;
+    }
+
+    private @NonNull List<DataSet> dataSets;
+    public @NonNull List<DataSet> getDataSets() { return dataSets; }
+    public void setDataSets(@NonNull List<DataSet> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"dataSets\" is null.");
+      }
+      this.dataSets = setterArg;
+    }
+
+    /** Constructor is private to enforce null safety; use Builder. */
+    private Bucket() {}
+    public static final class Builder {
+      private @Nullable Long startTime;
+      public @NonNull Builder setStartTime(@NonNull Long setterArg) {
+        this.startTime = setterArg;
+        return this;
+      }
+      private @Nullable Long endTime;
+      public @NonNull Builder setEndTime(@NonNull Long setterArg) {
+        this.endTime = setterArg;
+        return this;
+      }
+      private @Nullable Session session;
+      public @NonNull Builder setSession(@Nullable Session setterArg) {
+        this.session = setterArg;
+        return this;
+      }
+      private @Nullable List<DataSet> dataSets;
+      public @NonNull Builder setDataSets(@NonNull List<DataSet> setterArg) {
+        this.dataSets = setterArg;
+        return this;
+      }
+      public @NonNull Bucket build() {
+        Bucket pigeonReturn = new Bucket();
+        pigeonReturn.setStartTime(startTime);
+        pigeonReturn.setEndTime(endTime);
+        pigeonReturn.setSession(session);
+        pigeonReturn.setDataSets(dataSets);
+        return pigeonReturn;
+      }
+    }
+    @NonNull Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("startTime", startTime);
+      toMapResult.put("endTime", endTime);
+      toMapResult.put("session", (session == null) ? null : session.toMap());
+      toMapResult.put("dataSets", dataSets);
+      return toMapResult;
+    }
+    static @NonNull Bucket fromMap(@NonNull Map<String, Object> map) {
+      Bucket pigeonResult = new Bucket();
+      Object startTime = map.get("startTime");
+      pigeonResult.setStartTime((startTime == null) ? null : ((startTime instanceof Integer) ? (Integer)startTime : (Long)startTime));
+      Object endTime = map.get("endTime");
+      pigeonResult.setEndTime((endTime == null) ? null : ((endTime instanceof Integer) ? (Integer)endTime : (Long)endTime));
+      Object session = map.get("session");
+      pigeonResult.setSession((session == null) ? null : Session.fromMap((Map)session));
+      Object dataSets = map.get("dataSets");
+      pigeonResult.setDataSets((List<DataSet>)dataSets);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class Session {
+    private @NonNull String activity;
+    public @NonNull String getActivity() { return activity; }
+    public void setActivity(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"activity\" is null.");
+      }
+      this.activity = setterArg;
+    }
+
+    private @NonNull String indentifier;
+    public @NonNull String getIndentifier() { return indentifier; }
+    public void setIndentifier(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"indentifier\" is null.");
+      }
+      this.indentifier = setterArg;
+    }
+
+    private @NonNull String description;
+    public @NonNull String getDescription() { return description; }
+    public void setDescription(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"description\" is null.");
+      }
+      this.description = setterArg;
+    }
+
+    private @Nullable String name;
+    public @Nullable String getName() { return name; }
+    public void setName(@Nullable String setterArg) {
+      this.name = setterArg;
+    }
+
+    /** Constructor is private to enforce null safety; use Builder. */
+    private Session() {}
+    public static final class Builder {
+      private @Nullable String activity;
+      public @NonNull Builder setActivity(@NonNull String setterArg) {
+        this.activity = setterArg;
+        return this;
+      }
+      private @Nullable String indentifier;
+      public @NonNull Builder setIndentifier(@NonNull String setterArg) {
+        this.indentifier = setterArg;
+        return this;
+      }
+      private @Nullable String description;
+      public @NonNull Builder setDescription(@NonNull String setterArg) {
+        this.description = setterArg;
+        return this;
+      }
+      private @Nullable String name;
+      public @NonNull Builder setName(@Nullable String setterArg) {
+        this.name = setterArg;
+        return this;
+      }
+      public @NonNull Session build() {
+        Session pigeonReturn = new Session();
+        pigeonReturn.setActivity(activity);
+        pigeonReturn.setIndentifier(indentifier);
+        pigeonReturn.setDescription(description);
+        pigeonReturn.setName(name);
+        return pigeonReturn;
+      }
+    }
+    @NonNull Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("activity", activity);
+      toMapResult.put("indentifier", indentifier);
+      toMapResult.put("description", description);
+      toMapResult.put("name", name);
+      return toMapResult;
+    }
+    static @NonNull Session fromMap(@NonNull Map<String, Object> map) {
+      Session pigeonResult = new Session();
+      Object activity = map.get("activity");
+      pigeonResult.setActivity((String)activity);
+      Object indentifier = map.get("indentifier");
+      pigeonResult.setIndentifier((String)indentifier);
+      Object description = map.get("description");
+      pigeonResult.setDescription((String)description);
       Object name = map.get("name");
       pigeonResult.setName((String)name);
-      Object readScope = map.get("readScope");
-      pigeonResult.setReadScope((String)readScope);
-      Object writeScope = map.get("writeScope");
-      pigeonResult.setWriteScope((String)writeScope);
-      Object aggregateType = map.get("aggregateType");
-      pigeonResult.setAggregateType((aggregateType == null) ? null : DataType.fromMap((Map)aggregateType));
       return pigeonResult;
     }
   }
@@ -129,120 +270,65 @@ public class Messages {
       this.appPackageName = setterArg;
     }
 
-    private @Nullable DataType dateType;
-    public @Nullable DataType getDateType() { return dateType; }
-    public void setDateType(@Nullable DataType setterArg) {
-      this.dateType = setterArg;
-    }
-
-    private @Nullable String streamIdentifier;
-    public @Nullable String getStreamIdentifier() { return streamIdentifier; }
-    public void setStreamIdentifier(@Nullable String setterArg) {
+    private @NonNull String streamIdentifier;
+    public @NonNull String getStreamIdentifier() { return streamIdentifier; }
+    public void setStreamIdentifier(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"streamIdentifier\" is null.");
+      }
       this.streamIdentifier = setterArg;
     }
 
-    private @Nullable String streamName;
-    public @Nullable String getStreamName() { return streamName; }
-    public void setStreamName(@Nullable String setterArg) {
+    private @NonNull String streamName;
+    public @NonNull String getStreamName() { return streamName; }
+    public void setStreamName(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"streamName\" is null.");
+      }
       this.streamName = setterArg;
     }
 
-    private @Nullable DataSourceType type;
-    public @Nullable DataSourceType getType() { return type; }
-    public void setType(@Nullable DataSourceType setterArg) {
-      this.type = setterArg;
-    }
-
+    /** Constructor is private to enforce null safety; use Builder. */
+    private DataSource() {}
     public static final class Builder {
       private @Nullable String appPackageName;
       public @NonNull Builder setAppPackageName(@Nullable String setterArg) {
         this.appPackageName = setterArg;
         return this;
       }
-      private @Nullable DataType dateType;
-      public @NonNull Builder setDateType(@Nullable DataType setterArg) {
-        this.dateType = setterArg;
-        return this;
-      }
       private @Nullable String streamIdentifier;
-      public @NonNull Builder setStreamIdentifier(@Nullable String setterArg) {
+      public @NonNull Builder setStreamIdentifier(@NonNull String setterArg) {
         this.streamIdentifier = setterArg;
         return this;
       }
       private @Nullable String streamName;
-      public @NonNull Builder setStreamName(@Nullable String setterArg) {
+      public @NonNull Builder setStreamName(@NonNull String setterArg) {
         this.streamName = setterArg;
-        return this;
-      }
-      private @Nullable DataSourceType type;
-      public @NonNull Builder setType(@Nullable DataSourceType setterArg) {
-        this.type = setterArg;
         return this;
       }
       public @NonNull DataSource build() {
         DataSource pigeonReturn = new DataSource();
         pigeonReturn.setAppPackageName(appPackageName);
-        pigeonReturn.setDateType(dateType);
         pigeonReturn.setStreamIdentifier(streamIdentifier);
         pigeonReturn.setStreamName(streamName);
-        pigeonReturn.setType(type);
         return pigeonReturn;
       }
     }
     @NonNull Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
       toMapResult.put("appPackageName", appPackageName);
-      toMapResult.put("dateType", (dateType == null) ? null : dateType.toMap());
       toMapResult.put("streamIdentifier", streamIdentifier);
       toMapResult.put("streamName", streamName);
-      toMapResult.put("type", type == null ? null : type.index);
       return toMapResult;
     }
     static @NonNull DataSource fromMap(@NonNull Map<String, Object> map) {
       DataSource pigeonResult = new DataSource();
       Object appPackageName = map.get("appPackageName");
       pigeonResult.setAppPackageName((String)appPackageName);
-      Object dateType = map.get("dateType");
-      pigeonResult.setDateType((dateType == null) ? null : DataType.fromMap((Map)dateType));
       Object streamIdentifier = map.get("streamIdentifier");
       pigeonResult.setStreamIdentifier((String)streamIdentifier);
       Object streamName = map.get("streamName");
       pigeonResult.setStreamName((String)streamName);
-      Object type = map.get("type");
-      pigeonResult.setType(type == null ? null : DataSourceType.values()[(int)type]);
-      return pigeonResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static class DataPoint {
-    private @Nullable DataSource dataSource;
-    public @Nullable DataSource getDataSource() { return dataSource; }
-    public void setDataSource(@Nullable DataSource setterArg) {
-      this.dataSource = setterArg;
-    }
-
-    public static final class Builder {
-      private @Nullable DataSource dataSource;
-      public @NonNull Builder setDataSource(@Nullable DataSource setterArg) {
-        this.dataSource = setterArg;
-        return this;
-      }
-      public @NonNull DataPoint build() {
-        DataPoint pigeonReturn = new DataPoint();
-        pigeonReturn.setDataSource(dataSource);
-        return pigeonReturn;
-      }
-    }
-    @NonNull Map<String, Object> toMap() {
-      Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("dataSource", (dataSource == null) ? null : dataSource.toMap());
-      return toMapResult;
-    }
-    static @NonNull DataPoint fromMap(@NonNull Map<String, Object> map) {
-      DataPoint pigeonResult = new DataPoint();
-      Object dataSource = map.get("dataSource");
-      pigeonResult.setDataSource((dataSource == null) ? null : DataSource.fromMap((Map)dataSource));
       return pigeonResult;
     }
   }
@@ -255,6 +341,15 @@ public class Messages {
       this.dataType = setterArg;
     }
 
+    private @NonNull Boolean isEmpty;
+    public @NonNull Boolean getIsEmpty() { return isEmpty; }
+    public void setIsEmpty(@NonNull Boolean setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"isEmpty\" is null.");
+      }
+      this.isEmpty = setterArg;
+    }
+
     private @NonNull List<DataPoint> dataPoints;
     public @NonNull List<DataPoint> getDataPoints() { return dataPoints; }
     public void setDataPoints(@NonNull List<DataPoint> setterArg) {
@@ -262,6 +357,12 @@ public class Messages {
         throw new IllegalStateException("Nonnull field \"dataPoints\" is null.");
       }
       this.dataPoints = setterArg;
+    }
+
+    private @Nullable DataSource dataSource;
+    public @Nullable DataSource getDataSource() { return dataSource; }
+    public void setDataSource(@Nullable DataSource setterArg) {
+      this.dataSource = setterArg;
     }
 
     /** Constructor is private to enforce null safety; use Builder. */
@@ -272,30 +373,142 @@ public class Messages {
         this.dataType = setterArg;
         return this;
       }
+      private @Nullable Boolean isEmpty;
+      public @NonNull Builder setIsEmpty(@NonNull Boolean setterArg) {
+        this.isEmpty = setterArg;
+        return this;
+      }
       private @Nullable List<DataPoint> dataPoints;
       public @NonNull Builder setDataPoints(@NonNull List<DataPoint> setterArg) {
         this.dataPoints = setterArg;
         return this;
       }
+      private @Nullable DataSource dataSource;
+      public @NonNull Builder setDataSource(@Nullable DataSource setterArg) {
+        this.dataSource = setterArg;
+        return this;
+      }
       public @NonNull DataSet build() {
         DataSet pigeonReturn = new DataSet();
         pigeonReturn.setDataType(dataType);
+        pigeonReturn.setIsEmpty(isEmpty);
         pigeonReturn.setDataPoints(dataPoints);
+        pigeonReturn.setDataSource(dataSource);
         return pigeonReturn;
       }
     }
     @NonNull Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("dataType", (dataType == null) ? null : dataType.toMap());
+      toMapResult.put("dataType", dataType == null ? null : dataType.index);
+      toMapResult.put("isEmpty", isEmpty);
       toMapResult.put("dataPoints", dataPoints);
+      toMapResult.put("dataSource", (dataSource == null) ? null : dataSource.toMap());
       return toMapResult;
     }
     static @NonNull DataSet fromMap(@NonNull Map<String, Object> map) {
       DataSet pigeonResult = new DataSet();
       Object dataType = map.get("dataType");
-      pigeonResult.setDataType((dataType == null) ? null : DataType.fromMap((Map)dataType));
+      pigeonResult.setDataType(dataType == null ? null : DataType.values()[(int)dataType]);
+      Object isEmpty = map.get("isEmpty");
+      pigeonResult.setIsEmpty((Boolean)isEmpty);
       Object dataPoints = map.get("dataPoints");
       pigeonResult.setDataPoints((List<DataPoint>)dataPoints);
+      Object dataSource = map.get("dataSource");
+      pigeonResult.setDataSource((dataSource == null) ? null : DataSource.fromMap((Map)dataSource));
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class DataPoint {
+    private @NonNull List<DataPointValue> values;
+    public @NonNull List<DataPointValue> getValues() { return values; }
+    public void setValues(@NonNull List<DataPointValue> setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"values\" is null.");
+      }
+      this.values = setterArg;
+    }
+
+    /** Constructor is private to enforce null safety; use Builder. */
+    private DataPoint() {}
+    public static final class Builder {
+      private @Nullable List<DataPointValue> values;
+      public @NonNull Builder setValues(@NonNull List<DataPointValue> setterArg) {
+        this.values = setterArg;
+        return this;
+      }
+      public @NonNull DataPoint build() {
+        DataPoint pigeonReturn = new DataPoint();
+        pigeonReturn.setValues(values);
+        return pigeonReturn;
+      }
+    }
+    @NonNull Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("values", values);
+      return toMapResult;
+    }
+    static @NonNull DataPoint fromMap(@NonNull Map<String, Object> map) {
+      DataPoint pigeonResult = new DataPoint();
+      Object values = map.get("values");
+      pigeonResult.setValues((List<DataPointValue>)values);
+      return pigeonResult;
+    }
+  }
+
+  /** Generated class from Pigeon that represents data sent in messages. */
+  public static class DataPointValue {
+    private @NonNull String valueType;
+    public @NonNull String getValueType() { return valueType; }
+    public void setValueType(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"valueType\" is null.");
+      }
+      this.valueType = setterArg;
+    }
+
+    private @NonNull String value;
+    public @NonNull String getValue() { return value; }
+    public void setValue(@NonNull String setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"value\" is null.");
+      }
+      this.value = setterArg;
+    }
+
+    /** Constructor is private to enforce null safety; use Builder. */
+    private DataPointValue() {}
+    public static final class Builder {
+      private @Nullable String valueType;
+      public @NonNull Builder setValueType(@NonNull String setterArg) {
+        this.valueType = setterArg;
+        return this;
+      }
+      private @Nullable String value;
+      public @NonNull Builder setValue(@NonNull String setterArg) {
+        this.value = setterArg;
+        return this;
+      }
+      public @NonNull DataPointValue build() {
+        DataPointValue pigeonReturn = new DataPointValue();
+        pigeonReturn.setValueType(valueType);
+        pigeonReturn.setValue(value);
+        return pigeonReturn;
+      }
+    }
+    @NonNull Map<String, Object> toMap() {
+      Map<String, Object> toMapResult = new HashMap<>();
+      toMapResult.put("valueType", valueType);
+      toMapResult.put("value", value);
+      return toMapResult;
+    }
+    static @NonNull DataPointValue fromMap(@NonNull Map<String, Object> map) {
+      DataPointValue pigeonResult = new DataPointValue();
+      Object valueType = map.get("valueType");
+      pigeonResult.setValueType((String)valueType);
+      Object value = map.get("value");
+      pigeonResult.setValue((String)value);
       return pigeonResult;
     }
   }
@@ -304,23 +517,32 @@ public class Messages {
     void success(T result);
     void error(Throwable error);
   }
-  private static class HistoryClientCodec extends StandardMessageCodec {
-    public static final HistoryClientCodec INSTANCE = new HistoryClientCodec();
-    private HistoryClientCodec() {}
+  private static class GoogleFitClientCodec extends StandardMessageCodec {
+    public static final GoogleFitClientCodec INSTANCE = new GoogleFitClientCodec();
+    private GoogleFitClientCodec() {}
     @Override
     protected Object readValueOfType(byte type, ByteBuffer buffer) {
       switch (type) {
         case (byte)128:         
-          return DataPoint.fromMap((Map<String, Object>) readValue(buffer));
+          return AggregateResponse.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)129:         
-          return DataSet.fromMap((Map<String, Object>) readValue(buffer));
+          return Bucket.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)130:         
-          return DataSource.fromMap((Map<String, Object>) readValue(buffer));
+          return DataPoint.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)131:         
-          return DataType.fromMap((Map<String, Object>) readValue(buffer));
+          return DataPointValue.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)132:         
+          return DataSet.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)133:         
+          return DataSource.fromMap((Map<String, Object>) readValue(buffer));
+        
+        case (byte)134:         
+          return Session.fromMap((Map<String, Object>) readValue(buffer));
         
         default:        
           return super.readValueOfType(type, buffer);
@@ -329,21 +551,33 @@ public class Messages {
     }
     @Override
     protected void writeValue(ByteArrayOutputStream stream, Object value)     {
-      if (value instanceof DataPoint) {
+      if (value instanceof AggregateResponse) {
         stream.write(128);
+        writeValue(stream, ((AggregateResponse) value).toMap());
+      } else 
+      if (value instanceof Bucket) {
+        stream.write(129);
+        writeValue(stream, ((Bucket) value).toMap());
+      } else 
+      if (value instanceof DataPoint) {
+        stream.write(130);
         writeValue(stream, ((DataPoint) value).toMap());
       } else 
+      if (value instanceof DataPointValue) {
+        stream.write(131);
+        writeValue(stream, ((DataPointValue) value).toMap());
+      } else 
       if (value instanceof DataSet) {
-        stream.write(129);
+        stream.write(132);
         writeValue(stream, ((DataSet) value).toMap());
       } else 
       if (value instanceof DataSource) {
-        stream.write(130);
+        stream.write(133);
         writeValue(stream, ((DataSource) value).toMap());
       } else 
-      if (value instanceof DataType) {
-        stream.write(131);
-        writeValue(stream, ((DataType) value).toMap());
+      if (value instanceof Session) {
+        stream.write(134);
+        writeValue(stream, ((Session) value).toMap());
       } else 
 {
         super.writeValue(stream, value);
@@ -352,31 +586,27 @@ public class Messages {
   }
 
   /** Generated interface from Pigeon that represents a handler of messages from Flutter.*/
-  public interface HistoryClient {
-    void readDailyTotal(@NonNull DataType dataType, Result<DataSet> result);
-    void readDailyTotalFromLocalDevice(@NonNull DataType dataType, Result<DataSet> result);
+  public interface GoogleFitClient {
+    void hasPermissions(Result<Boolean> result);
+    void requestAuthorization(Result<Boolean> result);
+    void aggregate(@NonNull Long startTimeMillis, @NonNull Long endTimeMillis, Result<AggregateResponse> result);
 
-    /** The codec used by HistoryClient. */
+    /** The codec used by GoogleFitClient. */
     static MessageCodec<Object> getCodec() {
-      return HistoryClientCodec.INSTANCE;
+      return GoogleFitClientCodec.INSTANCE;
     }
 
-    /** Sets up an instance of `HistoryClient` to handle messages through the `binaryMessenger`. */
-    static void setup(BinaryMessenger binaryMessenger, HistoryClient api) {
+    /** Sets up an instance of `GoogleFitClient` to handle messages through the `binaryMessenger`. */
+    static void setup(BinaryMessenger binaryMessenger, GoogleFitClient api) {
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.HistoryClient.readDailyTotal", getCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitClient.hasPermissions", getCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
             try {
-              ArrayList<Object> args = (ArrayList<Object>)message;
-              DataType dataTypeArg = (DataType)args.get(0);
-              if (dataTypeArg == null) {
-                throw new NullPointerException("dataTypeArg unexpectedly null.");
-              }
-              Result<DataSet> resultCallback = new Result<DataSet>() {
-                public void success(DataSet result) {
+              Result<Boolean> resultCallback = new Result<Boolean>() {
+                public void success(Boolean result) {
                   wrapped.put("result", result);
                   reply.reply(wrapped);
                 }
@@ -386,7 +616,7 @@ public class Messages {
                 }
               };
 
-              api.readDailyTotal(dataTypeArg, resultCallback);
+              api.hasPermissions(resultCallback);
             }
             catch (Error | RuntimeException exception) {
               wrapped.put("error", wrapError(exception));
@@ -399,18 +629,13 @@ public class Messages {
       }
       {
         BasicMessageChannel<Object> channel =
-            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.HistoryClient.readDailyTotalFromLocalDevice", getCodec());
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitClient.requestAuthorization", getCodec());
         if (api != null) {
           channel.setMessageHandler((message, reply) -> {
             Map<String, Object> wrapped = new HashMap<>();
             try {
-              ArrayList<Object> args = (ArrayList<Object>)message;
-              DataType dataTypeArg = (DataType)args.get(0);
-              if (dataTypeArg == null) {
-                throw new NullPointerException("dataTypeArg unexpectedly null.");
-              }
-              Result<DataSet> resultCallback = new Result<DataSet>() {
-                public void success(DataSet result) {
+              Result<Boolean> resultCallback = new Result<Boolean>() {
+                public void success(Boolean result) {
                   wrapped.put("result", result);
                   reply.reply(wrapped);
                 }
@@ -420,7 +645,45 @@ public class Messages {
                 }
               };
 
-              api.readDailyTotalFromLocalDevice(dataTypeArg, resultCallback);
+              api.requestAuthorization(resultCallback);
+            }
+            catch (Error | RuntimeException exception) {
+              wrapped.put("error", wrapError(exception));
+              reply.reply(wrapped);
+            }
+          });
+        } else {
+          channel.setMessageHandler(null);
+        }
+      }
+      {
+        BasicMessageChannel<Object> channel =
+            new BasicMessageChannel<>(binaryMessenger, "dev.flutter.pigeon.GoogleFitClient.aggregate", getCodec());
+        if (api != null) {
+          channel.setMessageHandler((message, reply) -> {
+            Map<String, Object> wrapped = new HashMap<>();
+            try {
+              ArrayList<Object> args = (ArrayList<Object>)message;
+              Number startTimeMillisArg = (Number)args.get(0);
+              if (startTimeMillisArg == null) {
+                throw new NullPointerException("startTimeMillisArg unexpectedly null.");
+              }
+              Number endTimeMillisArg = (Number)args.get(1);
+              if (endTimeMillisArg == null) {
+                throw new NullPointerException("endTimeMillisArg unexpectedly null.");
+              }
+              Result<AggregateResponse> resultCallback = new Result<AggregateResponse>() {
+                public void success(AggregateResponse result) {
+                  wrapped.put("result", result);
+                  reply.reply(wrapped);
+                }
+                public void error(Throwable error) {
+                  wrapped.put("error", wrapError(error));
+                  reply.reply(wrapped);
+                }
+              };
+
+              api.aggregate((startTimeMillisArg == null) ? null : startTimeMillisArg.longValue(), (endTimeMillisArg == null) ? null : endTimeMillisArg.longValue(), resultCallback);
             }
             catch (Error | RuntimeException exception) {
               wrapped.put("error", wrapError(exception));
