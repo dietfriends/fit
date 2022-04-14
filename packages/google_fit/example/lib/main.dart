@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fit/google_fit.dart';
 
@@ -17,11 +17,13 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   String _platformVersion = 'Unknown';
+  late final GoogleFitClient _client;
 
   @override
   void initState() {
     super.initState();
     initPlatformState();
+    _client = GoogleFitClient();
   }
 
   // Platform messages are asynchronous, so we initialize in an async method.
@@ -53,8 +55,32 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: const Text('Plugin example app'),
         ),
-        body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+        body: Column(
+          children: [
+            ElevatedButton(
+              onPressed: () async {
+                var result = await _client.hasPermissions();
+                print(result);
+              },
+              child: const Text('has permission'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                var result = await _client.requestAuthorization();
+                print(result);
+              },
+              child: const Text('auth'),
+            ),
+            ElevatedButton(
+              onPressed: () async {
+                var yesterDay = DateTime(2022, 4, 13).millisecondsSinceEpoch;
+                var now = DateTime.now().millisecondsSinceEpoch;
+
+                await _client.aggregate(yesterDay, now);
+              },
+              child: const Text('daily total'),
+            ),
+          ],
         ),
       ),
     );
