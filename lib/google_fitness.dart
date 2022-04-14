@@ -3,19 +3,19 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:fit/src/generated/messages.pb.dart';
-import 'package:fit/src/more_struct.dart';
+import 'package:fixnum/fixnum.dart' as $fixnum;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/fitness/v1.dart' as $fitness;
-import 'package:http/src/client.dart';
-import 'package:fixnum/fixnum.dart' as $fixnum;
+
 import 'src/generated/messages.dart';
 import 'src/google/google_auth_client.dart';
 import 'src/google/messages.dart';
+
 export 'src/provider.dart';
 
 class GoogleFitness {
-  static $fitness.FitnessApi _restApiInstance;
-  static GoogleFitApi _apiInstance;
+  static $fitness.FitnessApi? _restApiInstance;
+  static GoogleFitApi? _apiInstance;
   static GoogleAuthClient _client = GoogleAuthClient();
   static GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
@@ -23,7 +23,7 @@ class GoogleFitness {
     ],
   );
 
-  static FitnessSession _sessionInstance;
+  static FitnessSession? _sessionInstance;
 
   GoogleFitness();
 
@@ -31,14 +31,14 @@ class GoogleFitness {
     if (_apiInstance == null) {
       _apiInstance = GoogleFitApi();
     }
-    return _apiInstance;
+    return _apiInstance!;
   }
 
   static $fitness.FitnessApi get _restApi {
     if (_restApiInstance == null) {
       _restApiInstance = $fitness.FitnessApi(_client);
     }
-    return _restApiInstance;
+    return _restApiInstance!;
   }
 
   static Future<void> init() {
@@ -71,54 +71,35 @@ class FitnessSession {
 
   Future<ListSessionsResponse> list({
     List<int> activityType = const [],
-    DateTime endTime,
+    DateTime? endTime,
     bool includeDeleted = false,
-    String pageToken,
-    DateTime startTime,
-    String $fields,
-    GoogleFitnessSource source,
+    String? pageToken,
+    DateTime? startTime,
+    String? $fields,
+    GoogleFitnessSource? source,
   }) async {
     //if (Platform.isAndroid || source == GoogleFitnessSource.sdk) {
     if (false) {
       // TODO
 
-      final request = (ListSessionsRequest()
-        ..activityType.addAll(activityType)
-        ..includeDeleted = includeDeleted);
 
-      if (startTime != null) {
-        request.startTime = $fixnum.Int64(startTime?.millisecondsSinceEpoch);
-      }
-      if (endTime != null) {
-        request.endTime = $fixnum.Int64(endTime?.millisecondsSinceEpoch);
-      }
-      if (pageToken != null) {
-        request.pageToken = pageToken;
-      }
-      if ($fields != null) {
-        request.fields = $fields;
-      }
-
-      final response = await _sdk
-          .sessionsList(ProtoWrapper()..proto = request.writeToBuffer());
-
-      return ListSessionsResponse.fromBuffer(response.proto);
     } else {
       final response = await _restApi.users.sessions.list('me',
           activityType: activityType,
-          endTime: endTime.toUtc().toIso8601String(),
+          endTime: endTime?.toUtc().toIso8601String(),
           includeDeleted: includeDeleted,
           pageToken: pageToken,
-          startTime: startTime.toUtc().toIso8601String(),
+          startTime: startTime?.toUtc().toIso8601String(),
           $fields: $fields);
 
-      return ListSessionsResponseX.fromFitness(response);
+      //return ListSessionsResponseX.fromFitness(response);
     }
+    return ListSessionsResponse();
   }
 
   Future<AggregateResponse> aggregate(
     AggregateRequest request, {
-    String fields,
+    String? fields,
   }) async {
     final aggregateRequest = $fitness.AggregateRequest();
 

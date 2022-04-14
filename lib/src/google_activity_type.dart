@@ -174,8 +174,6 @@ enum GoogleActivityType {
 extension MoreGoogleActivityTypes on GoogleActivityType {
   int get code => index;
   String get name {
-    switch(this) {
-
-    }
+    return "";
   }
 }

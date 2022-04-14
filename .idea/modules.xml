@@ -2,9 +2,13 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/fitness.iml" filepath="$PROJECT_DIR$/fitness.iml" />
-      <module fileurl="file://$PROJECT_DIR$/android/fitness_android.iml" filepath="$PROJECT_DIR$/android/fitness_android.iml" />
-      <module fileurl="file://$PROJECT_DIR$/example/android/fitness_example_android.iml" filepath="$PROJECT_DIR$/example/android/fitness_example_android.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/apple_health/melos_apple_health.iml" filepath="$PROJECT_DIR$/packages/apple_health/melos_apple_health.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/apple_health/example/melos_apple_health_example.iml" filepath="$PROJECT_DIR$/packages/apple_health/example/melos_apple_health_example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/google_fit/melos_google_fit.iml" filepath="$PROJECT_DIR$/packages/google_fit/melos_google_fit.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/google_fit/example/melos_google_fit_example.iml" filepath="$PROJECT_DIR$/packages/google_fit/example/melos_google_fit_example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/samung_health/melos_samung_health.iml" filepath="$PROJECT_DIR$/packages/samung_health/melos_samung_health.iml" />
+      <module fileurl="file://$PROJECT_DIR$/packages/samung_health/example/melos_samung_health_example.iml" filepath="$PROJECT_DIR$/packages/samung_health/example/melos_samung_health_example.iml" />
+      <module fileurl="file://$PROJECT_DIR$/melos_fit.iml" filepath="$PROJECT_DIR$/melos_fit.iml" />
     </modules>
   </component>
 </project>
