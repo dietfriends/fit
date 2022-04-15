@@ -30,6 +30,7 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
   private lateinit var channel: MethodChannel
   private var activity: Activity? = null
   private var context: Context? = null
+  private var authResult: Messages.Result<Boolean>? = null
 
   private val scopes: Array<Scope> = arrayOf(
     Fitness.SCOPE_ACTIVITY_READ_WRITE,
@@ -43,6 +44,7 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
   override fun onDetachedFromEngine(@NonNull binding: FlutterPlugin.FlutterPluginBinding) {
     Messages.GoogleFitClient.setup(binding.binaryMessenger, null)
     activity = null
+    authResult = null
   }
 
   override fun onAttachedToActivity(binding: ActivityPluginBinding) {
@@ -67,10 +69,10 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
     if (requestCode == GOOGLE_FIT_PERMISSIONS_REQUEST_CODE) {
       if (resultCode == Activity.RESULT_OK) {
         Log.d("GOOGLE_FIT", "Access Granted!")
-        return true
+        authResult!!.success(true)
       } else if (resultCode == Activity.RESULT_CANCELED) {
         Log.d("GOOGLE_FIT", "Access Denied!")
-        return false
+        authResult!!.success(false)
       }
     }
     return false
@@ -94,6 +96,8 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
       return
     }
 
+    authResult = result
+
     val isGranted = GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(activity!!), *scopes)
     /// Not granted? Ask for permission
     if (!isGranted && activity != null) {
@@ -105,7 +109,7 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
     }
     /// Permission already granted
     else {
-      result.success(true)
+      authResult!!.success(true)
     }
   }
 
