@@ -126,19 +126,27 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
 
     val historyClient = Fitness.getHistoryClient(activity!!, lastAccount!!)
 
+    val estimatedSteps = DataSource.Builder()
+      .setAppPackageName("com.google.android.gms")
+      .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
+      .setType(DataSource.TYPE_DERIVED)
+      .setStreamName("estimated_steps")
+      .build()
+
     historyClient.readData(
       DataReadRequest.Builder()
-        .setTimeRange(startTimeMillis, endTimeMillis, TimeUnit.MILLISECONDS)
+        .aggregate(estimatedSteps)
         .aggregate(DataType.TYPE_MOVE_MINUTES)
         .aggregate(DataType.TYPE_CALORIES_EXPENDED)
         .aggregate(DataType.TYPE_SPEED)
         .aggregate(DataType.TYPE_DISTANCE_DELTA)
-        .aggregate(DataType.TYPE_STEP_COUNT_DELTA)
-        .bucketBySession(1, TimeUnit.MINUTES)
+        .bucketBySession(1, TimeUnit.SECONDS)
+        .setTimeRange(startTimeMillis, endTimeMillis, TimeUnit.MILLISECONDS)
+        .enableServerQueries()
         .build()
-    ).addOnSuccessListener {
-      Log.i("GOOGLE_FIT::SUCCESS", "DataSet added successfully!")
-      result.success(it.toPigeon())
+    ).addOnSuccessListener { response ->
+      Log.i("GOOGLE_FIT::SUCCESS", "Status : ${response.status}")
+      result.success(response.toPigeon())
     }
       .addOnFailureListener { e ->
         Log.w("GOOGLE_FIT::ERROR", "There was an error adding the DataSet", e)
@@ -172,6 +180,9 @@ fun Session.toPigeon(): Messages.Session {
 }
 
 fun DataSet.toPigeon(): Messages.DataSet {
+  Log.i("GOOGLE_FIT", "DataType Name : ${ dataType.name }")
+  Log.i("GOOGLE_FIT", "DataPointSize : ${ dataPoints.size }")
+
   return Messages.DataSet.Builder()
     .setDataPoints(dataPoints.map { it.toPigeon() }.toList())
     .setDataType(dataType.toPigeon())
@@ -186,6 +197,8 @@ fun DataPoint.toPigeon(): Messages.DataPoint {
   val values = mutableListOf<Messages.DataPointValue>()
 
   for (field in fields) {
+    Log.i("GOOGLE_FIT", "Field Name : ${ field.name }")
+    Log.i("GOOGLE_FIT", "Field Format : ${ field.format }")
     val value = Messages.DataPointValue
       .Builder()
       .setValue(getValue(field).toString())
