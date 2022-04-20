@@ -180,8 +180,8 @@ fun Session.toPigeon(): Messages.Session {
 }
 
 fun DataSet.toPigeon(): Messages.DataSet {
-  Log.i("GOOGLE_FIT", "DataType Name : ${ dataType.name }")
-  Log.i("GOOGLE_FIT", "DataPointSize : ${ dataPoints.size }")
+  Log.d("GOOGLE_FIT", "DataType Name : ${ dataType.name }")
+  Log.d("GOOGLE_FIT", "DataPointSize : ${ dataPoints.size }")
 
   return Messages.DataSet.Builder()
     .setDataPoints(dataPoints.map { it.toPigeon() }.toList())
@@ -197,8 +197,8 @@ fun DataPoint.toPigeon(): Messages.DataPoint {
   val values = mutableListOf<Messages.DataPointValue>()
 
   for (field in fields) {
-    Log.i("GOOGLE_FIT", "Field Name : ${ field.name }")
-    Log.i("GOOGLE_FIT", "Field Format : ${ field.format }")
+    Log.d("GOOGLE_FIT", "Field Name : ${ field.name }")
+    Log.d("GOOGLE_FIT", "Field Format : ${ field.format }")
     val value = Messages.DataPointValue
       .Builder()
       .setValue(getValue(field).toString())
