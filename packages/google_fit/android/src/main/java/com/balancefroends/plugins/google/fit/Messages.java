@@ -28,7 +28,8 @@ public class Messages {
     speed(2),
     distance(3),
     step(4),
-    unknwon(5);
+    activity(5),
+    unknwon(6);
 
     private int index;
     private DataType(final int index) {
@@ -184,6 +185,15 @@ public class Messages {
       this.activity = setterArg;
     }
 
+    private @NonNull Long activityType;
+    public @NonNull Long getActivityType() { return activityType; }
+    public void setActivityType(@NonNull Long setterArg) {
+      if (setterArg == null) {
+        throw new IllegalStateException("Nonnull field \"activityType\" is null.");
+      }
+      this.activityType = setterArg;
+    }
+
     private @NonNull String indentifier;
     public @NonNull String getIndentifier() { return indentifier; }
     public void setIndentifier(@NonNull String setterArg) {
@@ -216,6 +226,11 @@ public class Messages {
         this.activity = setterArg;
         return this;
       }
+      private @Nullable Long activityType;
+      public @NonNull Builder setActivityType(@NonNull Long setterArg) {
+        this.activityType = setterArg;
+        return this;
+      }
       private @Nullable String indentifier;
       public @NonNull Builder setIndentifier(@NonNull String setterArg) {
         this.indentifier = setterArg;
@@ -234,6 +249,7 @@ public class Messages {
       public @NonNull Session build() {
         Session pigeonReturn = new Session();
         pigeonReturn.setActivity(activity);
+        pigeonReturn.setActivityType(activityType);
         pigeonReturn.setIndentifier(indentifier);
         pigeonReturn.setDescription(description);
         pigeonReturn.setName(name);
@@ -243,6 +259,7 @@ public class Messages {
     @NonNull Map<String, Object> toMap() {
       Map<String, Object> toMapResult = new HashMap<>();
       toMapResult.put("activity", activity);
+      toMapResult.put("activityType", activityType);
       toMapResult.put("indentifier", indentifier);
       toMapResult.put("description", description);
       toMapResult.put("name", name);
@@ -252,6 +269,8 @@ public class Messages {
       Session pigeonResult = new Session();
       Object activity = map.get("activity");
       pigeonResult.setActivity((String)activity);
+      Object activityType = map.get("activityType");
+      pigeonResult.setActivityType((activityType == null) ? null : ((activityType instanceof Integer) ? (Integer)activityType : (Long)activityType));
       Object indentifier = map.get("indentifier");
       pigeonResult.setIndentifier((String)indentifier);
       Object description = map.get("description");
@@ -421,44 +440,6 @@ public class Messages {
 
   /** Generated class from Pigeon that represents data sent in messages. */
   public static class DataPoint {
-    private @NonNull List<DataPointValue> values;
-    public @NonNull List<DataPointValue> getValues() { return values; }
-    public void setValues(@NonNull List<DataPointValue> setterArg) {
-      if (setterArg == null) {
-        throw new IllegalStateException("Nonnull field \"values\" is null.");
-      }
-      this.values = setterArg;
-    }
-
-    /** Constructor is private to enforce null safety; use Builder. */
-    private DataPoint() {}
-    public static final class Builder {
-      private @Nullable List<DataPointValue> values;
-      public @NonNull Builder setValues(@NonNull List<DataPointValue> setterArg) {
-        this.values = setterArg;
-        return this;
-      }
-      public @NonNull DataPoint build() {
-        DataPoint pigeonReturn = new DataPoint();
-        pigeonReturn.setValues(values);
-        return pigeonReturn;
-      }
-    }
-    @NonNull Map<String, Object> toMap() {
-      Map<String, Object> toMapResult = new HashMap<>();
-      toMapResult.put("values", values);
-      return toMapResult;
-    }
-    static @NonNull DataPoint fromMap(@NonNull Map<String, Object> map) {
-      DataPoint pigeonResult = new DataPoint();
-      Object values = map.get("values");
-      pigeonResult.setValues((List<DataPointValue>)values);
-      return pigeonResult;
-    }
-  }
-
-  /** Generated class from Pigeon that represents data sent in messages. */
-  public static class DataPointValue {
     private @NonNull String valueType;
     public @NonNull String getValueType() { return valueType; }
     public void setValueType(@NonNull String setterArg) {
@@ -478,7 +459,7 @@ public class Messages {
     }
 
     /** Constructor is private to enforce null safety; use Builder. */
-    private DataPointValue() {}
+    private DataPoint() {}
     public static final class Builder {
       private @Nullable String valueType;
       public @NonNull Builder setValueType(@NonNull String setterArg) {
@@ -490,8 +471,8 @@ public class Messages {
         this.value = setterArg;
         return this;
       }
-      public @NonNull DataPointValue build() {
-        DataPointValue pigeonReturn = new DataPointValue();
+      public @NonNull DataPoint build() {
+        DataPoint pigeonReturn = new DataPoint();
         pigeonReturn.setValueType(valueType);
         pigeonReturn.setValue(value);
         return pigeonReturn;
@@ -503,8 +484,8 @@ public class Messages {
       toMapResult.put("value", value);
       return toMapResult;
     }
-    static @NonNull DataPointValue fromMap(@NonNull Map<String, Object> map) {
-      DataPointValue pigeonResult = new DataPointValue();
+    static @NonNull DataPoint fromMap(@NonNull Map<String, Object> map) {
+      DataPoint pigeonResult = new DataPoint();
       Object valueType = map.get("valueType");
       pigeonResult.setValueType((String)valueType);
       Object value = map.get("value");
@@ -533,15 +514,12 @@ public class Messages {
           return DataPoint.fromMap((Map<String, Object>) readValue(buffer));
         
         case (byte)131:         
-          return DataPointValue.fromMap((Map<String, Object>) readValue(buffer));
-        
-        case (byte)132:         
           return DataSet.fromMap((Map<String, Object>) readValue(buffer));
         
-        case (byte)133:         
+        case (byte)132:         
           return DataSource.fromMap((Map<String, Object>) readValue(buffer));
         
-        case (byte)134:         
+        case (byte)133:         
           return Session.fromMap((Map<String, Object>) readValue(buffer));
         
         default:        
@@ -563,20 +541,16 @@ public class Messages {
         stream.write(130);
         writeValue(stream, ((DataPoint) value).toMap());
       } else 
-      if (value instanceof DataPointValue) {
-        stream.write(131);
-        writeValue(stream, ((DataPointValue) value).toMap());
-      } else 
       if (value instanceof DataSet) {
-        stream.write(132);
+        stream.write(131);
         writeValue(stream, ((DataSet) value).toMap());
       } else 
       if (value instanceof DataSource) {
-        stream.write(133);
+        stream.write(132);
         writeValue(stream, ((DataSource) value).toMap());
       } else 
       if (value instanceof Session) {
-        stream.write(134);
+        stream.write(133);
         writeValue(stream, ((Session) value).toMap());
       } else 
 {

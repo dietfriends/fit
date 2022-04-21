@@ -14,6 +14,7 @@ enum DataType {
   speed,
   distance,
   step,
+  activity,
   unknwon,
 }
 
@@ -81,12 +82,14 @@ class Bucket {
 class Session {
   Session({
     required this.activity,
+    required this.activityType,
     required this.indentifier,
     required this.description,
     this.name,
   });
 
   String activity;
+  int activityType;
   String indentifier;
   String description;
   String? name;
@@ -94,6 +97,7 @@ class Session {
   Object encode() {
     final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
     pigeonMap['activity'] = activity;
+    pigeonMap['activityType'] = activityType;
     pigeonMap['indentifier'] = indentifier;
     pigeonMap['description'] = description;
     pigeonMap['name'] = name;
@@ -104,6 +108,7 @@ class Session {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
     return Session(
       activity: pigeonMap['activity']! as String,
+      activityType: pigeonMap['activityType']! as int,
       indentifier: pigeonMap['indentifier']! as String,
       description: pigeonMap['description']! as String,
       name: pigeonMap['name'] as String?,
@@ -179,27 +184,6 @@ class DataSet {
 
 class DataPoint {
   DataPoint({
-    required this.values,
-  });
-
-  List<DataPointValue?> values;
-
-  Object encode() {
-    final Map<Object?, Object?> pigeonMap = <Object?, Object?>{};
-    pigeonMap['values'] = values;
-    return pigeonMap;
-  }
-
-  static DataPoint decode(Object message) {
-    final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
-    return DataPoint(
-      values: (pigeonMap['values'] as List<Object?>?)!.cast<DataPointValue?>(),
-    );
-  }
-}
-
-class DataPointValue {
-  DataPointValue({
     required this.valueType,
     required this.value,
   });
@@ -214,9 +198,9 @@ class DataPointValue {
     return pigeonMap;
   }
 
-  static DataPointValue decode(Object message) {
+  static DataPoint decode(Object message) {
     final Map<Object?, Object?> pigeonMap = message as Map<Object?, Object?>;
-    return DataPointValue(
+    return DataPoint(
       valueType: pigeonMap['valueType']! as String,
       value: pigeonMap['value']! as String,
     );
@@ -239,20 +223,16 @@ class _GoogleFitClientCodec extends StandardMessageCodec {
       buffer.putUint8(130);
       writeValue(buffer, value.encode());
     } else 
-    if (value is DataPointValue) {
+    if (value is DataSet) {
       buffer.putUint8(131);
       writeValue(buffer, value.encode());
     } else 
-    if (value is DataSet) {
+    if (value is DataSource) {
       buffer.putUint8(132);
       writeValue(buffer, value.encode());
     } else 
-    if (value is DataSource) {
-      buffer.putUint8(133);
-      writeValue(buffer, value.encode());
-    } else 
     if (value is Session) {
-      buffer.putUint8(134);
+      buffer.putUint8(133);
       writeValue(buffer, value.encode());
     } else 
 {
@@ -272,15 +252,12 @@ class _GoogleFitClientCodec extends StandardMessageCodec {
         return DataPoint.decode(readValue(buffer)!);
       
       case 131:       
-        return DataPointValue.decode(readValue(buffer)!);
-      
-      case 132:       
         return DataSet.decode(readValue(buffer)!);
       
-      case 133:       
+      case 132:       
         return DataSource.decode(readValue(buffer)!);
       
-      case 134:       
+      case 133:       
         return Session.decode(readValue(buffer)!);
       
       default:      

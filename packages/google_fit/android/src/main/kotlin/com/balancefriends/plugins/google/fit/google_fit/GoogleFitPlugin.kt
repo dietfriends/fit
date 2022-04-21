@@ -124,34 +124,41 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
       result.error(Throwable("need authorization"))
     }
 
-    val historyClient = Fitness.getHistoryClient(activity!!, lastAccount!!)
+    try {
+      val historyClient = Fitness.getHistoryClient(activity!!, lastAccount!!)
 
-    val estimatedSteps = DataSource.Builder()
-      .setAppPackageName("com.google.android.gms")
-      .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
-      .setType(DataSource.TYPE_DERIVED)
-      .setStreamName("estimated_steps")
-      .build()
-
-    historyClient.readData(
-      DataReadRequest.Builder()
-        .aggregate(estimatedSteps)
-        .aggregate(DataType.TYPE_MOVE_MINUTES)
-        .aggregate(DataType.TYPE_CALORIES_EXPENDED)
-        .aggregate(DataType.TYPE_SPEED)
-        .aggregate(DataType.TYPE_DISTANCE_DELTA)
-        .bucketBySession(1, TimeUnit.SECONDS)
-        .setTimeRange(startTimeMillis, endTimeMillis, TimeUnit.MILLISECONDS)
-        .enableServerQueries()
+      val estimatedSteps = DataSource.Builder()
+        .setAppPackageName("com.google.android.gms")
+        .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
+        .setType(DataSource.TYPE_DERIVED)
+        .setStreamName("estimated_steps")
         .build()
-    ).addOnSuccessListener { response ->
-      Log.i("GOOGLE_FIT::SUCCESS", "Status : ${response.status}")
-      result.success(response.toPigeon())
-    }
+
+      historyClient.readData(
+        DataReadRequest.Builder()
+          .enableServerQueries()
+          .aggregate(estimatedSteps)
+          .aggregate(DataType.TYPE_MOVE_MINUTES)
+          .aggregate(DataType.TYPE_CALORIES_EXPENDED)
+          .aggregate(DataType.TYPE_DISTANCE_DELTA)
+          .aggregate(DataType.TYPE_SPEED)
+          .bucketBySession(1, TimeUnit.SECONDS)
+          .setTimeRange(startTimeMillis, endTimeMillis, TimeUnit.MILLISECONDS)
+          .build()
+      ).addOnSuccessListener { response ->
+        Log.i("GOOGLE_FIT::SUCCESS", "Status : ${response.status}")
+        result.success(response.toPigeon())
+      }
       .addOnFailureListener { e ->
         Log.w("GOOGLE_FIT::ERROR", "There was an error adding the DataSet", e)
         result.error(Throwable("failed to get buckets"))
       }
+    } catch (e: Exception) {
+      Log.w("GOOGLE_FIT::ERROR", "Exception: $e")
+      result.error(Throwable(e))
+    }
+
+
   }
 }
 
@@ -171,8 +178,22 @@ fun Bucket.toPigeon(): Messages.Bucket {
 }
 
 fun Session.toPigeon(): Messages.Session {
+  val activitySegmentDataSource = DataSource.Builder()
+    .setAppPackageName(appPackageName!!)
+    .setDataType(DataType.TYPE_ACTIVITY_SEGMENT)
+    .setStreamName("${name}-activity segments")
+    .setType(DataSource.TYPE_RAW)
+    .build()
+
+  val activityDataPoint = DataPoint.builder(activitySegmentDataSource)
+    .setActivityField(Field.FIELD_ACTIVITY, activity)
+    .build()
+
+  val activityId = activityDataPoint.getValue(Field.FIELD_ACTIVITY).asInt()
+
   return Messages.Session.Builder()
     .setActivity(activity)
+    .setActivityType(activityId.toLong())
     .setDescription(description)
     .setIndentifier(identifier)
     .setName(name)
@@ -184,7 +205,7 @@ fun DataSet.toPigeon(): Messages.DataSet {
   Log.d("GOOGLE_FIT", "DataPointSize : ${ dataPoints.size }")
 
   return Messages.DataSet.Builder()
-    .setDataPoints(dataPoints.map { it.toPigeon() }.toList())
+    .setDataPoints(dataPoints.map { it.toPigeon() }.flatten().toList())
     .setDataType(dataType.toPigeon())
     .setDataSource(dataSource.toPigeon())
     .setIsEmpty(isEmpty)
@@ -192,14 +213,12 @@ fun DataSet.toPigeon(): Messages.DataSet {
 
 }
 
-fun DataPoint.toPigeon(): Messages.DataPoint {
+fun DataPoint.toPigeon(): List<Messages.DataPoint> {
   val fields = dataType.fields
-  val values = mutableListOf<Messages.DataPointValue>()
+  val values = mutableListOf<Messages.DataPoint>()
 
   for (field in fields) {
-    Log.d("GOOGLE_FIT", "Field Name : ${ field.name }")
-    Log.d("GOOGLE_FIT", "Field Format : ${ field.format }")
-    val value = Messages.DataPointValue
+    val value = Messages.DataPoint
       .Builder()
       .setValue(getValue(field).toString())
       .setValueType(field.name)
@@ -208,9 +227,7 @@ fun DataPoint.toPigeon(): Messages.DataPoint {
     values += value
   }
 
-  return Messages.DataPoint.Builder()
-    .setValues(values)
-    .build()
+  return values;
 }
 
 fun DataSource.toPigeon(): Messages.DataSource {
@@ -225,19 +242,10 @@ fun DataType.toPigeon(): Messages.DataType {
     DataType.TYPE_CALORIES_EXPENDED -> Messages.DataType.calorie
     DataType.TYPE_MOVE_MINUTES -> Messages.DataType.duration
     DataType.TYPE_DISTANCE_DELTA -> Messages.DataType.distance
+    DataType.AGGREGATE_SPEED_SUMMARY -> Messages.DataType.speed
+    DataType.AGGREGATE_ACTIVITY_SUMMARY -> Messages.DataType.activity
     DataType.TYPE_SPEED -> Messages.DataType.speed
     DataType.TYPE_STEP_COUNT_DELTA -> Messages.DataType.step
     else -> Messages.DataType.unknwon
-  }
-}
-
-fun Messages.DataType.toFit(): DataType {
-  return when (this) {
-    Messages.DataType.calorie -> DataType.TYPE_CALORIES_EXPENDED
-    Messages.DataType.duration -> DataType.TYPE_MOVE_MINUTES
-    Messages.DataType.distance -> DataType.TYPE_DISTANCE_DELTA
-    Messages.DataType.speed -> DataType.TYPE_SPEED
-    Messages.DataType.step -> DataType.TYPE_STEP_COUNT_DELTA
-    else -> throw IllegalArgumentException()
   }
 }
