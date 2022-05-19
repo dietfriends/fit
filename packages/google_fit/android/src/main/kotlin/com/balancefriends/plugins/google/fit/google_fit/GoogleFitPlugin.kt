@@ -8,6 +8,7 @@ import com.balancefroends.plugins.google.fit.Messages
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.fitness.Fitness
+import com.google.android.gms.fitness.FitnessOptions
 import com.google.android.gms.fitness.data.*
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.google.android.gms.fitness.result.DataReadResponse
@@ -32,8 +33,15 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
   private var context: Context? = null
   private var authResult: Messages.Result<Boolean>? = null
 
+  private val fitnessOptions = FitnessOptions.builder()
+    .addDataType(DataType.TYPE_MOVE_MINUTES)
+    .addDataType(DataType.TYPE_CALORIES_EXPENDED)
+    .addDataType(DataType.TYPE_DISTANCE_DELTA)
+    .addDataType(DataType.TYPE_SPEED)
+    .build()
+
   private val scopes: Array<Scope> = arrayOf(
-    Fitness.SCOPE_ACTIVITY_READ_WRITE,
+    Fitness.SCOPE_ACTIVITY_READ,
     Fitness.SCOPE_LOCATION_READ)
 
   override fun onAttachedToEngine(@NonNull flutterPluginBinding: FlutterPlugin.FlutterPluginBinding) {
@@ -85,7 +93,7 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
       return
     }
 
-    val isGranted = GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(activity!!), *scopes)
+    val isGranted = GoogleSignIn.hasPermissions(GoogleSignIn.getAccountForExtension(activity!!, fitnessOptions), *scopes)
 
     result.success(isGranted)
   }
@@ -98,13 +106,13 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
 
     authResult = result
 
-    val isGranted = GoogleSignIn.hasPermissions(GoogleSignIn.getLastSignedInAccount(activity!!), *scopes)
+    val isGranted = GoogleSignIn.hasPermissions(GoogleSignIn.getAccountForExtension(activity!!, fitnessOptions), *scopes)
     /// Not granted? Ask for permission
     if (!isGranted && activity != null) {
       GoogleSignIn.requestPermissions(
         activity!!,
         GOOGLE_FIT_PERMISSIONS_REQUEST_CODE,
-        GoogleSignIn.getLastSignedInAccount(activity!!),
+        GoogleSignIn.getAccountForExtension(activity!!, fitnessOptions),
         *scopes)
     }
     /// Permission already granted
@@ -118,14 +126,14 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
     endTimeMillis: Long,
     result: Messages.Result<Messages.AggregateResponse>
   ) {
-    val lastAccount = GoogleSignIn.getLastSignedInAccount(activity!!)
+    val lastAccount = GoogleSignIn.getAccountForExtension(activity!!, fitnessOptions).requestExtraScopes(*scopes)
 
-    if (lastAccount == null) {
+    if (lastAccount.isExpired) {
       result.error(Throwable("need authorization"))
     }
 
     try {
-      val historyClient = Fitness.getHistoryClient(activity!!, lastAccount!!)
+      val historyClient = Fitness.getHistoryClient(activity!!, lastAccount)
 
       val estimatedSteps = DataSource.Builder()
         .setAppPackageName("com.google.android.gms")
