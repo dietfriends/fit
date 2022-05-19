@@ -17,14 +17,16 @@ class Bucket {
 
 class Session {
   final String activity;
+  final int activityType;
   final String indentifier;
   final String description;
   final String? name;
 
-  Session(this.activity, this.indentifier, this.description, this.name);
+  Session(this.activity, this.activityType, this.indentifier, this.description,
+      this.name);
 }
 
-enum DataType { duration, calorie, speed, distance, step, unknwon }
+enum DataType { duration, calorie, speed, distance, step, activity, unknwon }
 
 enum DataSourceType {
   typeDerieved,
@@ -55,16 +57,10 @@ class DataSet {
 }
 
 class DataPoint {
-  final List<DataPointValue?> values;
-
-  DataPoint(this.values);
-}
-
-class DataPointValue {
   final String valueType;
   final String value;
 
-  DataPointValue(this.valueType, this.value);
+  DataPoint(this.valueType, this.value);
 }
 
 @ConfigurePigeon(PigeonOptions(
