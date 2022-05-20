@@ -127,19 +127,14 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
     endTimeMillis: Long,
     result: Messages.Result<Messages.AggregateResponse>
   ) {
-    val lastAccount = GoogleSignIn.getAccountForExtension(activity!!, fitnessOptions).requestExtraScopes(*scopes)
-
-    if (lastAccount.isExpired) {
-      result.error(Throwable("need authorization"))
-    }
-
     lateinit var historyClient : HistoryClient
 
     try {
+      val lastAccount = GoogleSignIn.getAccountForExtension(activity!!, fitnessOptions)
       historyClient = Fitness.getHistoryClient(activity!!, lastAccount)
     } catch (e: Exception) {
       Log.w("GOOGLE_FIT::ERROR", "Exception: $e")
-      result.error(Throwable(e))
+      return result.error(Throwable(e))
     }
 
     val estimatedSteps = DataSource.Builder()
