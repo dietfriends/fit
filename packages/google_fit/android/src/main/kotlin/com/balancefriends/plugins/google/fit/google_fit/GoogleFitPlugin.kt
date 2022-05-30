@@ -9,6 +9,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.common.api.Scope
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
+import com.google.android.gms.fitness.HistoryClient
 import com.google.android.gms.fitness.data.*
 import com.google.android.gms.fitness.request.DataReadRequest
 import com.google.android.gms.fitness.result.DataReadResponse
@@ -126,47 +127,42 @@ class GoogleFitPlugin : FlutterPlugin, ActivityAware, PluginRegistry.ActivityRes
     endTimeMillis: Long,
     result: Messages.Result<Messages.AggregateResponse>
   ) {
-    val lastAccount = GoogleSignIn.getAccountForExtension(activity!!, fitnessOptions).requestExtraScopes(*scopes)
-
-    if (lastAccount.isExpired) {
-      result.error(Throwable("need authorization"))
-    }
+    lateinit var historyClient : HistoryClient
 
     try {
-      val historyClient = Fitness.getHistoryClient(activity!!, lastAccount)
-
-      val estimatedSteps = DataSource.Builder()
-        .setAppPackageName("com.google.android.gms")
-        .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
-        .setType(DataSource.TYPE_DERIVED)
-        .setStreamName("estimated_steps")
-        .build()
-
-      historyClient.readData(
-        DataReadRequest.Builder()
-          .enableServerQueries()
-          .aggregate(estimatedSteps)
-          .aggregate(DataType.TYPE_MOVE_MINUTES)
-          .aggregate(DataType.TYPE_CALORIES_EXPENDED)
-          .aggregate(DataType.TYPE_DISTANCE_DELTA)
-          .aggregate(DataType.TYPE_SPEED)
-          .bucketBySession(1, TimeUnit.SECONDS)
-          .setTimeRange(startTimeMillis, endTimeMillis, TimeUnit.MILLISECONDS)
-          .build()
-      ).addOnSuccessListener { response ->
-        Log.i("GOOGLE_FIT::SUCCESS", "Status : ${response.status}")
-        result.success(response.toPigeon())
-      }
-      .addOnFailureListener { e ->
-        Log.w("GOOGLE_FIT::ERROR", "There was an error adding the DataSet", e)
-        result.error(Throwable("failed to get buckets"))
-      }
+      val lastAccount = GoogleSignIn.getAccountForExtension(activity!!, fitnessOptions)
+      historyClient = Fitness.getHistoryClient(activity!!, lastAccount)
     } catch (e: Exception) {
       Log.w("GOOGLE_FIT::ERROR", "Exception: $e")
-      result.error(Throwable(e))
+      return result.error(Throwable(e))
     }
 
+    val estimatedSteps = DataSource.Builder()
+      .setAppPackageName("com.google.android.gms")
+      .setDataType(DataType.TYPE_STEP_COUNT_DELTA)
+      .setType(DataSource.TYPE_DERIVED)
+      .setStreamName("estimated_steps")
+      .build()
 
+    historyClient.readData(
+      DataReadRequest.Builder()
+        .enableServerQueries()
+        .aggregate(estimatedSteps)
+        .aggregate(DataType.TYPE_MOVE_MINUTES)
+        .aggregate(DataType.TYPE_CALORIES_EXPENDED)
+        .aggregate(DataType.TYPE_DISTANCE_DELTA)
+        .aggregate(DataType.TYPE_SPEED)
+        .bucketBySession(1, TimeUnit.SECONDS)
+        .setTimeRange(startTimeMillis, endTimeMillis, TimeUnit.MILLISECONDS)
+        .build()
+    ).addOnSuccessListener { response ->
+      Log.i("GOOGLE_FIT::SUCCESS", "Status : ${response.status}")
+      result.success(response.toPigeon())
+    }
+    .addOnFailureListener { e ->
+      Log.w("GOOGLE_FIT::ERROR", "There was an error adding the DataSet", e)
+      result.error(Throwable("failed to get buckets"))
+    }
   }
 }
 
